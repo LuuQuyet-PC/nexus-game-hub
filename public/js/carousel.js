@@ -18,9 +18,17 @@ const heroCarousel = {
     this.bindEvents();
   },
 
+  // Helper: tạo style background cho slide (ảnh hoặc gradient)
+  buildSlideStyle(item) {
+    if (item.coverImage) {
+      return `background-image: url('${item.coverImage}'); background-size: cover; background-position: center;`;
+    }
+    return `background: ${item.coverColor};`;
+  },
+
   render() {
     this.track.innerHTML = this.items.map(item => `
-      <div class="carousel-slide" style="background: ${item.coverColor};">
+      <div class="carousel-slide" style="${this.buildSlideStyle(item)}">
         <div class="slide-overlay"></div>
         <div class="slide-content">
           <span class="slide-tag">${item.category} // POPULAR</span>
@@ -62,11 +70,15 @@ const heroCarousel = {
   pause() { clearInterval(this.timer); },
 
   bindEvents() {
-    document.getElementById('carousel-prev').onclick = () => { this.prev(); this.pause(); this.startAutoPlay(); };
-    document.getElementById('carousel-next').onclick = () => { this.next(); this.pause(); this.startAutoPlay(); };
+    const prevBtn = document.getElementById('carousel-prev');
+    const nextBtn = document.getElementById('carousel-next');
+    if (prevBtn) prevBtn.onclick = () => { this.prev(); this.pause(); this.startAutoPlay(); };
+    if (nextBtn) nextBtn.onclick = () => { this.next(); this.pause(); this.startAutoPlay(); };
 
     const carouselEl = document.getElementById('hero-carousel');
-    carouselEl.addEventListener('mouseenter', () => this.pause());
-    carouselEl.addEventListener('mouseleave', () => this.startAutoPlay());
+    if (carouselEl) {
+      carouselEl.addEventListener('mouseenter', () => this.pause());
+      carouselEl.addEventListener('mouseleave', () => this.startAutoPlay());
+    }
   }
 };

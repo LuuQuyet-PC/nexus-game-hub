@@ -14,8 +14,8 @@ window.addEventListener('mousemove', (e) => {
 
 // Thuật toán nội suy tuyến tính (Lerp) tạo quán tính bong bóng
 function animateCursor() {
-  bubbleX += (mouseX - bubbleX) * 0.16;
-  bubbleY += (mouseY - bubbleY) * 0.16;
+  bubbleX += (mouseX - bubbleX) * 0.5;
+  bubbleY += (mouseY - bubbleY) * 0.5;
   cursorBubble.style.transform = `translate(${bubbleX}px, ${bubbleY}px)`;
   requestAnimationFrame(animateCursor);
 }
