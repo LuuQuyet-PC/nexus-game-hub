@@ -36,18 +36,18 @@ const DEFAULT_GAMES_DATABASE = [
   },
   {
     id: "g-3",
-    title: "Downhill Racer",
+    title: "Real Car Driving",
     category: "Racing",
     price: 0.00,
     rating: 4.5,
     playCount: "1.5M",
     coverColor: "linear-gradient(135deg, #e74c3c, #c0392b)",
-    coverImage: "assets/covers/DownhillRacer.jpg",
+    coverImage: "assets/covers/RealCarDriving.jpg",
     badge: "HOT",
     isHot: true,
     isNew: false,
     desc: "Đua xe xuống dốc tốc độ cao, né chướng ngại vật trên đường núi.",
-    gameUrl: "https://games.crazygames.com/vi_VN/downhill-racer-bvk/index.html"
+    gameUrl: "https://games.crazygames.com/vi_VN/real-car-driving/index.html"
   },
   {
     id: "g-4",
@@ -81,18 +81,18 @@ const DEFAULT_GAMES_DATABASE = [
   },
   {
     id: "g-6",
-    title: "Unmatched Ego 2",
-    category: "Action",
+    title: "Red and Blue leader 2",
+    category: "Shooting",
     price: 0.00,
     rating: 4.5,
     playCount: "750K",
     coverColor: "linear-gradient(135deg, #6c5ce7, #a29bfe)",
-    coverImage: "assets/covers/UnmatchedEgo2.jpg",
+    coverImage: "assets/covers/RedAndBlueLeader2.jpg",
     badge: "MỚI",
     isHot: false,
     isNew: true,
-    desc: "Hành động chặt chém tốc độ cao, combo đẹp mắt với nhiều kỹ năng.",
-    gameUrl: "https://games.crazygames.com/vi_VN/unmatched-ego-2/index.html"
+    desc: "Hành động chiến đấu nhanh chóng, chiến thắng đối thủ trong các trận đấu trực tuyến.",
+    gameUrl: "https://app-492460.cdn.games.yandex.net/492460/zn3mqw0lgen1ujt03gvtnp4i4ogln9ds_brotli/index.html"
   },
   {
     id: "g-7",
@@ -107,7 +107,7 @@ const DEFAULT_GAMES_DATABASE = [
     isHot: true,
     isNew: false,
     desc: "Bắn súng FPS nhiều người chơi trực tuyến, đồ họa 3D chân thực.",
-    gameUrl: "https://games.crazygames.com/vi_VN/hazmob-fps-online-shooter/index.html"
+    gameUrl: "https://games.crazygames.com/vi_VN/fragen/index.html"
   },
   {
     id: "g-8",
@@ -153,6 +153,22 @@ const DEFAULT_GAMES_DATABASE = [
     isNew: true,
     desc: "Giải đố vui nhộn với chú tắc kè hoa, thay đổi màu sắc để vượt ải.",
     gameUrl: "https://games.crazygames.com/vi_VN/crazy-chameleon/index.html"
+  },
+  {
+    id : "g-11",
+    title : "Chess Free",
+    category : "Strategy",
+    price : 0.00,
+    rating : 4.2,
+    playCount : "1.3M",
+    coverColor : "linear-gradient(135deg, #f1c40f, #f39c12)",
+    coverImage : "assets/covers/ChessFree.jpg",
+    badge : "HOT",
+    isHot : true,
+    isNew : false,
+    desc : "Chơi cờ vua miễn phí với đối thủ AI hoặc người chơi khác.",
+    gameUrl :"https://games.crazygames.com/vi_VN/chess-free/index.html"
+
   }
 ];
 
