@@ -1,5 +1,5 @@
 /* ============================================================
-   NEXUS//PLAY — RESPONSIVE CYBERPUNK DESIGN SYSTEM
+   NEXUS//PLAY — RESPONSIVE CYBERPUNK DESIGN SYSTEM (FINAL)
    ============================================================ */
 
 :root {
@@ -18,7 +18,6 @@
   --text-main: #f0f4fc;
   --text-muted: #8b9bb4;
   
-  /* Fluid spacing & sizes */
   --header-height: clamp(56px, 8vw, 72px);
   --sidebar-width: clamp(220px, 20vw, 260px);
   --container-padding: clamp(0.8rem, 3vw, 2rem);
@@ -44,24 +43,24 @@ html {
   font-size: 16px;
 }
 
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+}
+
 body {
   background-color: var(--bg-color);
   color: var(--text-main);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
   min-height: 100dvh;
-  overflow-x: hidden;
-  position: relative;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  cursor: default;
 }
 
-/* Ẩn scrollbar ngang trên mobile */
-body {
-  overflow-x: hidden;
-}
-
-/* ===== THREE.JS CANVAS ===== */
 #bg-canvas {
   position: fixed;
   top: 0;
@@ -73,11 +72,7 @@ body {
   pointer-events: none;
 }
 
-/* ===== WATER RIPPLE CURSOR ===== */
-body {
-  cursor: default;
-}
-
+/* ===== CURSOR ===== */
 .cursor-ring {
   position: fixed;
   top: 0;
@@ -90,20 +85,14 @@ body {
   z-index: 99999;
   transform: translate(-50%, -50%);
   transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease;
-  box-shadow: 
-    0 0 12px rgba(0, 240, 255, 0.6),
-    inset 0 0 12px rgba(0, 240, 255, 0.3);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.6), inset 0 0 12px rgba(0, 240, 255, 0.3);
 }
 
 .cursor-ring.hover-active {
   width: 52px;
   height: 52px;
   border-color: var(--accent-magenta);
-  box-shadow: 
-    0 0 20px rgba(255, 0, 85, 0.7),
-    inset 0 0 16px rgba(255, 0, 85, 0.4);
+  box-shadow: 0 0 20px rgba(255, 0, 85, 0.7), inset 0 0 16px rgba(255, 0, 85, 0.4);
 }
 
 .cursor-ripple {
@@ -121,7 +110,7 @@ body {
 }
 
 .cursor-ripple.delay {
-  animation: waterRipple 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) 0.15s forwards;
+  animation-delay: 0.15s;
 }
 
 @keyframes waterRipple {
@@ -130,7 +119,7 @@ body {
   100% { width: 120px; height: 120px; opacity: 0; border-width: 1px; }
 }
 
-/* ===== 1. HEADER ===== */
+/* ===== HEADER ===== */
 .header {
   position: sticky;
   top: 0;
@@ -170,7 +159,6 @@ body {
   height: 2px;
   background: var(--accent-cyan);
   border-radius: 2px;
-  transition: 0.3s;
 }
 
 .brand {
@@ -202,7 +190,6 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 24px;
   padding: clamp(0.35rem, 1vw, 0.5rem) clamp(0.7rem, 2vw, 1rem);
-  transition: all 0.3s ease;
 }
 
 .search-bar:focus-within {
@@ -246,10 +233,7 @@ body {
   flex-shrink: 0;
 }
 
-.nav-links {
-  display: flex;
-  gap: 0.5rem;
-}
+.nav-links { display: flex; gap: 0.5rem; }
 
 .nav-item {
   background: transparent;
@@ -259,9 +243,9 @@ body {
   font-weight: 600;
   padding: clamp(0.35rem, 1vw, 0.45rem) clamp(0.6rem, 1.5vw, 0.85rem);
   border-radius: 8px;
-  transition: all 0.2s ease;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s ease;
 }
 
 .nav-item:hover, .nav-item.active {
@@ -280,9 +264,9 @@ body {
   border-radius: 8px;
   border: none;
   box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
-  transition: all 0.2s ease;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
@@ -290,9 +274,7 @@ body {
   box-shadow: 0 0 22px rgba(0, 240, 255, 0.6);
 }
 
-.user-profile {
-  position: relative;
-}
+.user-profile { position: relative; }
 
 .avatar {
   width: clamp(32px, 4vw, 38px);
@@ -330,9 +312,7 @@ body {
 }
 
 .profile-dropdown.open { display: flex; }
-
 .profile-header { display: flex; flex-direction: column; }
-
 .user-name { font-weight: 700; font-size: 0.95rem; }
 .user-role { font-size: 0.75rem; color: var(--accent-cyan); }
 
@@ -359,16 +339,18 @@ body {
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
-  transition: color 0.2s;
 }
 
 .dropdown-item:hover { color: var(--accent-cyan); }
 
-/* ===== 2. LAYOUT ===== */
+/* ===== LAYOUT ===== */
 .app-layout {
   display: flex;
   min-height: calc(100vh - var(--header-height));
   min-height: calc(100dvh - var(--header-height));
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .sidebar {
@@ -415,8 +397,8 @@ body {
   font-size: clamp(0.78rem, 1.3vw, 0.85rem);
   font-weight: 500;
   border: 1px solid transparent;
-  transition: all 0.25s ease;
   cursor: pointer;
+  transition: all 0.25s ease;
 }
 
 .cat-item-left {
@@ -462,7 +444,6 @@ body {
   font-weight: 700;
 }
 
-/* ===== MAIN CONTENT ===== */
 .main-content {
   flex: 1;
   min-width: 0;
@@ -474,14 +455,12 @@ body {
 .view-panel { display: none; }
 .view-panel.active { display: block; }
 
-/* ===== 3. HERO CAROUSEL ===== */
+/* ===== HERO CAROUSEL ===== */
 .hero-carousel {
   position: relative;
   width: 100%;
   height: clamp(240px, 35vw, 420px);
   background: var(--glass-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-xl);
   overflow: hidden;
@@ -507,14 +486,16 @@ body {
   background-position: center;
 }
 
-.slide-overlay {
+.carousel-slide::before {
+  content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, 
-    rgba(11, 14, 20, 0.95) 0%, 
-    rgba(11, 14, 20, 0.75) 50%, 
-    rgba(11, 14, 20, 0.3) 100%);
-  z-index: 1;
+  background: linear-gradient(90deg,
+    rgba(11, 14, 20, 0.9) 0%,
+    rgba(11, 14, 20, 0.6) 60%,
+    rgba(11, 14, 20, 0.2) 100%);
+  z-index: 0;
+  pointer-events: none;
 }
 
 .slide-content {
@@ -571,9 +552,9 @@ body {
   padding: clamp(0.6rem, 1.5vw, 0.8rem) clamp(1rem, 2.5vw, 1.6rem);
   border-radius: 8px;
   box-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
-  transition: all 0.2s ease;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s ease;
 }
 
 .btn-play-large:hover {
@@ -589,9 +570,9 @@ body {
   font-size: clamp(0.75rem, 1.5vw, 0.9rem);
   padding: clamp(0.6rem, 1.5vw, 0.8rem) clamp(1rem, 2.5vw, 1.4rem);
   border-radius: 8px;
-  transition: all 0.2s ease;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s ease;
 }
 
 .btn-secondary-large:hover {
@@ -614,8 +595,8 @@ body {
   justify-content: center;
   z-index: 10;
   font-size: clamp(0.9rem, 1.5vw, 1.2rem);
-  transition: all 0.2s;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .carousel-nav:hover {
@@ -642,8 +623,8 @@ body {
   height: 4px;
   background: rgba(255, 255, 255, 0.25);
   border-radius: 2px;
-  transition: all 0.3s ease;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .indicator-dot.active {
@@ -736,7 +717,7 @@ body {
   cursor: pointer;
 }
 
-/* ===== 5. SPOTLIGHT ===== */
+/* ===== SPOTLIGHT ===== */
 .crazy-spotlight {
   display: grid;
   grid-template-columns: minmax(0, 1.8fr) minmax(0, 2.2fr);
@@ -754,10 +735,27 @@ body {
   flex-direction: column;
   justify-content: flex-end;
   padding: var(--gap-large);
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   background-size: cover;
   background-position: center;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.spotlight-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, 
+    rgba(11, 14, 20, 0.2) 0%, 
+    rgba(11, 14, 20, 0.5) 40%,
+    rgba(11, 14, 20, 0.9) 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.spotlight-hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 .spotlight-hero:hover {
@@ -772,7 +770,7 @@ body {
   gap: var(--gap-medium);
 }
 
-/* ===== 6. CATEGORY CARDS ===== */
+/* ===== CATEGORY CARDS ===== */
 .category-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 22vw, 180px), 1fr));
@@ -790,8 +788,8 @@ body {
   justify-content: center;
   gap: 0.5rem;
   text-align: center;
-  transition: all 0.3s ease;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .category-card:hover {
@@ -813,7 +811,7 @@ body {
   color: var(--text-muted);
 }
 
-/* ===== 7. GAME GRID ===== */
+/* ===== GAME GRID ===== */
 .game-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(clamp(160px, 22vw, 240px), 1fr));
@@ -822,16 +820,14 @@ body {
 
 .game-card {
   background: var(--glass-card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .game-card:hover {
@@ -883,8 +879,8 @@ body {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.25s ease;
   z-index: 3;
+  transition: opacity 0.25s ease;
 }
 
 .game-card:hover .thumb-overlay { opacity: 1; }
@@ -947,9 +943,9 @@ body {
   font-size: clamp(0.7rem, 1.1vw, 0.78rem);
   padding: 0.4rem;
   border-radius: 6px;
-  transition: all 0.2s;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s;
 }
 
 .btn-card-buy:hover {
@@ -964,9 +960,9 @@ body {
   font-size: clamp(0.68rem, 1.1vw, 0.75rem);
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
-  transition: all 0.2s;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s;
 }
 
 .btn-card-demo:hover {
@@ -974,7 +970,7 @@ body {
   border-color: #fff;
 }
 
-/* ===== 8. MODAL ===== */
+/* ===== MODAL ===== */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -1018,9 +1014,11 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  align-items: flex-start;
   position: relative;
   background-size: cover;
   background-position: center;
+  overflow: hidden;
 }
 
 .detail-header::before {
@@ -1041,7 +1039,27 @@ body {
   font-family: 'Orbitron', sans-serif;
   font-size: clamp(1.2rem, 3vw, 2rem);
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+  word-wrap: break-word;
+  max-width: 100%;
 }
+
+.detail-header .badge {
+  display: inline-block;
+  width: auto;
+  max-width: fit-content;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.5px;
+  align-self: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.badge.badge-hot { background: var(--accent-magenta); color: #fff; }
+.badge.badge-new { background: var(--accent-cyan); color: #000; }
+.badge.badge-top { background: var(--accent-gold); color: #000; }
 
 .detail-body {
   padding: clamp(1rem, 2.5vw, 2rem);
@@ -1058,6 +1076,7 @@ body {
 }
 
 .meta-rating { color: var(--accent-gold); font-weight: 700; }
+
 .meta-price {
   font-family: 'Orbitron', sans-serif;
   color: var(--accent-cyan);
@@ -1082,7 +1101,7 @@ body {
 
 .screenshot-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.8rem;
   margin-bottom: 2rem;
 }
@@ -1114,9 +1133,9 @@ body {
   font-size: clamp(0.75rem, 1.3vw, 0.9rem);
   padding: clamp(0.6rem, 1.5vw, 0.8rem) clamp(1rem, 2vw, 1.4rem);
   border-radius: 8px;
-  transition: all 0.2s;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s;
 }
 
 .btn-buy-large:hover {
@@ -1132,9 +1151,9 @@ body {
   height: clamp(40px, 5vw, 48px);
   border-radius: 8px;
   font-size: clamp(1rem, 1.5vw, 1.2rem);
-  transition: all 0.2s;
   cursor: pointer;
   flex-shrink: 0;
+  transition: all 0.2s;
 }
 
 .btn-fav-icon.active {
@@ -1158,9 +1177,9 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 10;
-  transition: all 0.2s;
   cursor: pointer;
   line-height: 1;
+  transition: all 0.2s;
 }
 
 .modal-close:hover {
@@ -1168,7 +1187,7 @@ body {
   border-color: var(--accent-magenta);
 }
 
-/* ===== 9. GAME PLAYER ===== */
+/* ===== GAME PLAYER ===== */
 .game-player-overlay {
   position: fixed;
   inset: 0;
@@ -1237,9 +1256,9 @@ body {
   border-radius: 6px;
   font-size: clamp(0.68rem, 1.1vw, 0.8rem);
   font-weight: 600;
-  transition: all 0.2s;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s;
 }
 
 .btn-control:hover {
@@ -1300,7 +1319,7 @@ body {
   z-index: 2;
 }
 
-/* ===== FORM & TOAST ===== */
+/* ===== FORM ===== */
 .form-title {
   font-family: 'Orbitron', sans-serif;
   font-size: clamp(1rem, 2vw, 1.3rem);
@@ -1366,7 +1385,6 @@ body {
   position: fixed;
   top: calc(var(--header-height) + 10px);
   right: clamp(10px, 2vw, 25px);
-  left: auto;
   z-index: 999999;
   display: flex;
   flex-direction: column;
@@ -1398,7 +1416,7 @@ body {
   to { transform: translateX(0); opacity: 1; }
 }
 
-/* ===== 10. FOOTER ===== */
+/* ===== FOOTER ===== */
 .footer {
   background: rgba(11, 14, 20, 0.85);
   border-top: 1px solid var(--glass-border);
@@ -1439,8 +1457,8 @@ body {
   color: var(--text-muted);
   text-decoration: none;
   font-size: clamp(0.78rem, 1.3vw, 0.85rem);
-  transition: color 0.2s;
   cursor: pointer;
+  transition: color 0.2s;
 }
 
 .footer-col ul a:hover { color: var(--accent-cyan); }
@@ -1488,7 +1506,6 @@ body {
   }
   
   .hamburger-btn { display: flex; }
-  
   .nav-links { display: none; }
   
   .crazy-spotlight {
@@ -1503,246 +1520,205 @@ body {
 /* ============================================================
    RESPONSIVE — MOBILE (dưới 768px)
    ============================================================ */
-
-
-/* ============================================================
-   RESPONSIVE — MOBILE NHỎ (dưới 480px)
-   ============================================================ */
-
-
-/* ============================================================
-   LANDSCAPE MODE (màn hình ngang, chiều cao thấp)
-   ============================================================ */
-@media (orientation: landscape) and (max-height: 600px) {
-  .hero-carousel {
-    height: 240px;
-  }
+@media (max-width: 768px) {
   
-  .slide-content {
-    max-width: 60%;
-  }
-  
-  .slide-desc {
-    -webkit-line-clamp: 2;
-  }
-  
-  .spotlight-hero {
-    min-height: 200px;
-  }
-  
-  .sidebar {
-    overflow-y: auto;
-  }
-}
-
-/* ============================================================
-   MÀN HÌNH LỚN (trên 1600px)
-   ============================================================ */
-@media (min-width: 1600px) {
-  .main-content {
-    max-width: 1600px;
-    margin: 0 auto;
-  }
-  
-  .game-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  }
-}
-
-/* ============================================================
-   TOUCH DEVICE — Ẩn custom cursor
-   ============================================================ */
-@media (hover: none) and (pointer: coarse) {
+  /* ===== ẨN CUSTOM CURSOR ===== */
   .cursor-ring,
   .cursor-ripple {
     display: none !important;
   }
-  
   body { cursor: auto !important; }
-}
-/* ============================================================
-   FIX BUG — MODAL DETAIL TRÊN MOBILE
-   ============================================================ */
-
-/* Fix badge trong modal detail */
-.detail-header .badge {
-  display: inline-block;
-  width: auto;
-  max-width: fit-content;
-  padding: 0.25rem 0.65rem;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 800;
-  font-family: 'Orbitron', sans-serif;
-  letter-spacing: 0.5px;
-  align-self: flex-start;
-  margin-bottom: 0.5rem;
-  z-index: 2;
-  position: relative;
-}
-
-.badge.badge-hot {
-  background: var(--accent-magenta);
-  color: #fff;
-}
-
-.badge.badge-new {
-  background: var(--accent-cyan);
-  color: #000;
-}
-
-.badge.badge-top {
-  background: var(--accent-gold);
-  color: #000;
-}
-
-/* Fix detail-header layout */
-.detail-header {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  overflow: hidden;
-}
-
-.detail-header h2 {
-  position: relative;
-  z-index: 2;
-  word-wrap: break-word;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-/* Fix modal trên mobile */
-@media (max-width: 768px) {
-  .modal-backdrop {
-    padding: 0.5rem;
-    align-items: flex-start;
-    padding-top: 1rem;
+  
+  /* ===== HEADER ===== */
+  .header-center {
+    margin: 0 0.5rem;
   }
   
-  .modal-content {
-    max-width: 100%;
-    width: 100%;
-    padding: 1rem;
-    border-radius: 12px;
-    max-height: calc(100dvh - 2rem);
-    overflow-y: auto;
+  .header-right .btn-primary {
+    display: none;
   }
   
-  .modal-detail-card {
-    max-width: 100%;
-  }
+  /* ===== CAROUSEL ===== */
+  .slide-content { max-width: 100%; }
   
-  .detail-header {
-    height: 140px;
-    padding: 1rem;
-  }
-  
-  .detail-header h2 {
-    font-size: 1.2rem;
-    line-height: 1.2;
-  }
-  
-  .detail-body {
-    padding: 1rem;
-  }
-  
-  .detail-meta {
-    font-size: 0.75rem;
-    gap: 0.5rem;
-  }
-  
-  .detail-desc {
-    font-size: 0.82rem;
-    line-height: 1.5;
-  }
-  
-  .sub-heading {
-    font-size: 0.75rem;
-  }
-  
-  .screenshot-gallery {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-  }
-  
-  .screenshot-item {
-    height: 70px;
-    font-size: 0.65rem;
-  }
-  
-  .detail-actions {
+  .slide-actions {
     flex-direction: column;
-    gap: 0.6rem;
   }
   
-  .detail-actions button {
+  .btn-play-large,
+  .btn-secondary-large {
     width: 100%;
-    padding: 0.7rem;
-    font-size: 0.85rem;
+    text-align: center;
   }
   
-  .btn-fav-icon {
-    height: 44px;
-    width: 100%;
-  }
-}
-
-/* Fix modal trên mobile nhỏ */
-@media (max-width: 400px) {
-  .detail-header h2 {
-    font-size: 1rem;
+  .carousel-nav { display: none; }
+  
+  /* ===== SPOTLIGHT ===== */
+  .crazy-spotlight {
+    gap: var(--gap-small);
   }
   
-  .detail-meta {
+  .spotlight-side-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-small);
+  }
+  
+  /* ===== CATEGORY CARDS ===== */
+  .category-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-small);
+  }
+  
+  /* ===== GAME GRID ===== */
+  .game-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-small);
+  }
+  
+  .game-actions {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.3rem;
   }
   
-  .screenshot-gallery {
-    grid-template-columns: 1fr;
+  .btn-card-buy,
+  .btn-card-demo {
+    width: 100%;
   }
-}
-/* Fix spotlight — thêm overlay tối cho ảnh nền */
-.spotlight-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, 
-    rgba(11, 14, 20, 0.2) 0%, 
-    rgba(11, 14, 20, 0.5) 40%,
-    rgba(11, 14, 20, 0.9) 100%);
-  z-index: 0;
-  pointer-events: none;
-}
-
-.spotlight-hero > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* Fix carousel chữ đè watermark */
-.carousel-slide::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg,
-    rgba(11, 14, 20, 0.9) 0%,
-    rgba(11, 14, 20, 0.6) 60%,
-    rgba(11, 14, 20, 0.2) 100%);
-  z-index: 0;
-  pointer-events: none;
-}
-
-.carousel-slide .slide-content {
-  position: relative;
-  z-index: 2;
-}
-/* Fix game player trên mobile */
-@media (max-width: 768px) {
+  
+  /* ===== MODAL FULL MÀN ===== */
+  #modal-detail.modal-backdrop {
+    padding: 0 !important;
+    align-items: stretch !important;
+  }
+  
+  #modal-detail .modal-content {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    max-height: 100vh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+  
+  #modal-detail .modal-detail-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  
+  #modal-detail .detail-header {
+    height: 200px !important;
+    min-height: 200px !important;
+    max-height: 200px !important;
+    padding: 1rem !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    align-items: flex-start !important;
+  }
+  
+  #modal-detail .detail-header h2 {
+    font-size: 1.4rem !important;
+    line-height: 1.25 !important;
+  }
+  
+  #modal-detail .detail-header .badge {
+    display: inline-block !important;
+    width: auto !important;
+    max-width: fit-content !important;
+    padding: 0.25rem 0.65rem !important;
+    font-size: 0.7rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  #modal-detail .modal-close {
+    top: 12px !important;
+    right: 12px !important;
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.5rem !important;
+    z-index: 100 !important;
+  }
+  
+  #modal-detail .detail-body {
+    padding: 1.2rem !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  #modal-detail .detail-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+    font-size: 0.75rem !important;
+    margin-bottom: 0.8rem !important;
+  }
+  
+  #modal-detail .detail-desc {
+    font-size: 0.85rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  #modal-detail .screenshot-gallery {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.4rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  #modal-detail .screenshot-item {
+    height: 70px !important;
+    font-size: 0.6rem !important;
+  }
+  
+  #modal-detail .detail-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.6rem !important;
+    padding-top: 0.8rem !important;
+    margin-top: auto !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  #modal-detail .detail-actions .btn-play-large,
+  #modal-detail .detail-actions .btn-buy-large {
+    display: block !important;
+    width: 100% !important;
+    padding: 0.9rem 1rem !important;
+    font-size: 0.9rem !important;
+    min-height: 50px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    text-align: center !important;
+  }
+  
+  #modal-detail .detail-actions .btn-fav-icon {
+    display: block !important;
+    width: 100% !important;
+    height: 46px !important;
+    font-size: 1.2rem !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* ===== GAME PLAYER ===== */
   .game-player-overlay {
     width: 100vw;
     height: 100vh;
@@ -1798,195 +1774,189 @@ body {
     border: none;
   }
 }
+
 /* ============================================================
-   MODAL DETAIL — MOBILE FINAL FIX
-   Dán CUỐI file, đảm bảo không có gì đè lên
+   RESPONSIVE — MOBILE NHỎ (dưới 480px)
    ============================================================ */
-
-/* ===== RESET CACHE CSS TRÊN MOBILE ===== */
-@media (max-width: 768px) {
-  
-  /* === BADGE TRONG MODAL === */
-  #modal-detail .detail-header .badge {
-    display: inline-block !important;
-    width: auto !important;
-    max-width: fit-content !important;
-    padding: 0.25rem 0.6rem !important;
-    border-radius: 4px !important;
-    font-size: 0.65rem !important;
-    font-weight: 800 !important;
-    font-family: 'Orbitron', sans-serif !important;
-    align-self: flex-start !important;
-    margin: 0 0 0.4rem 0 !important;
-    background: var(--accent-magenta) !important;
-    color: #fff !important;
-    z-index: 3 !important;
-    position: relative !important;
-    line-height: 1.2 !important;
+@media (max-width: 480px) {
+  .brand span {
+    display: none;
   }
   
-  /* === DETAIL HEADER === */
+  .slide-title {
+    font-size: 1.1rem;
+  }
+  
+  .category-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .game-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .spotlight-side-grid {
+    grid-template-columns: 1fr;
+  }
+  
   #modal-detail .detail-header {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-end !important;
-    align-items: flex-start !important;
-    height: 130px !important;
-    min-height: 130px !important;
-    max-height: 130px !important;
-    padding: 0.8rem !important;
-    overflow: hidden !important;
-    position: relative !important;
+    height: 150px !important;
+    min-height: 150px !important;
   }
   
   #modal-detail .detail-header h2 {
     font-size: 1.1rem !important;
-    line-height: 1.2 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    max-width: 100% !important;
-    word-wrap: break-word !important;
-    z-index: 2 !important;
-    position: relative !important;
-  }
-  
-  /* === DETAIL BODY === */
-  #modal-detail .detail-body {
-    padding: 0.9rem !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  
-  /* === DETAIL META === */
-  #modal-detail .detail-meta {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 0.4rem 0.7rem !important;
-    margin-bottom: 0.7rem !important;
-    font-size: 0.72rem !important;
-  }
-  
-  #modal-detail .meta-price {
-    font-size: 0.9rem !important;
-    font-weight: 800 !important;
-  }
-  
-  /* === DETAIL DESC === */
-  #modal-detail .detail-desc {
-    font-size: 0.78rem !important;
-    line-height: 1.5 !important;
-    margin-bottom: 0.8rem !important;
-  }
-  
-  /* === SUB HEADING === */
-  #modal-detail .sub-heading {
-    font-size: 0.68rem !important;
-    margin-bottom: 0.4rem !important;
-    letter-spacing: 0.5px !important;
-  }
-  
-  /* === SCREENSHOT GALLERY === */
-  #modal-detail .screenshot-gallery {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 0.35rem !important;
-    margin-bottom: 0.8rem !important;
-  }
-  
-  #modal-detail .screenshot-item {
-    height: 55px !important;
-    font-size: 0.55rem !important;
-    border-radius: 6px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-  
-  /* === NÚT HÀNH ĐỘNG — QUAN TRỌNG NHẤT === */
-  #modal-detail .detail-actions {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 0.5rem !important;
-    padding-top: 0.6rem !important;
-    border-top: 1px solid rgba(255,255,255,0.1) !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-  
-  #modal-detail .detail-actions .btn-play-large,
-  #modal-detail .detail-actions .btn-buy-large {
-    display: block !important;
-    width: 100% !important;
-    padding: 0.7rem 0.8rem !important;
-    font-size: 0.8rem !important;
-    min-height: 44px !important;
-    height: auto !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    text-align: center !important;
-  }
-  
-  #modal-detail .detail-actions .btn-fav-icon {
-    display: block !important;
-    width: 100% !important;
-    height: 42px !important;
-    font-size: 1.1rem !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  
-  /* === MODAL BACKDROP === */
-  #modal-detail.modal-backdrop {
-    padding: 0.5rem !important;
-    align-items: flex-start !important;
-    padding-top: 0.8rem !important;
-    overflow-y: auto !important;
-  }
-  
-  /* === MODAL CONTENT === */
-  #modal-detail .modal-content {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 0 !important;
-    border-radius: 12px !important;
-    max-height: calc(100vh - 1.6rem) !important;
-    max-height: calc(100dvh - 1.6rem) !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-  }
-  
-  #modal-detail .modal-detail-card {
-    max-width: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: hidden !important;
-  }
-}
-
-/* ===== MOBILE RẤT NHỎ (dưới 400px) ===== */
-@media (max-width: 400px) {
-  #modal-detail .detail-header {
-    height: 110px !important;
-    min-height: 110px !important;
-  }
-  
-  #modal-detail .detail-header h2 {
-    font-size: 1rem !important;
-  }
-  
-  #modal-detail .detail-meta {
-    font-size: 0.68rem !important;
-    gap: 0.3rem 0.5rem !important;
   }
   
   #modal-detail .screenshot-gallery {
     grid-template-columns: repeat(2, 1fr) !important;
   }
   
-  #modal-detail .screenshot-item {
-    height: 60px !important;
+  .player-controls {
+    width: 100%;
+    justify-content: space-between;
   }
+}
+
+/* ============================================================
+   LANDSCAPE (màn hình ngang, chiều cao thấp)
+   ============================================================ */
+@media (orientation: landscape) and (max-height: 600px) {
+  .hero-carousel {
+    height: 240px;
+  }
+  
+  .slide-content {
+    max-width: 60%;
+  }
+  
+  .slide-desc {
+    -webkit-line-clamp: 2;
+  }
+  
+  .spotlight-hero {
+    min-height: 200px;
+  }
+  
+  .sidebar {
+    overflow-y: auto;
+  }
+  
+  /* Modal landscape — 2 cột */
+  #modal-detail.modal-backdrop {
+    padding: 0 !important;
+  }
+  
+  #modal-detail .modal-content {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+  }
+  
+  #modal-detail .modal-detail-card {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  #modal-detail .detail-header {
+    width: 40% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: 100% !important;
+    border-radius: 0 !important;
+    padding: 1rem !important;
+  }
+  
+  #modal-detail .detail-body {
+    width: 60% !important;
+    padding: 0.8rem 1rem !important;
+    overflow-y: auto !important;
+    max-height: 100vh !important;
+  }
+  
+  #modal-detail .detail-header h2 {
+    font-size: 1.1rem !important;
+  }
+  
+  #modal-detail .detail-meta {
+    font-size: 0.7rem !important;
+    gap: 0.4rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  #modal-detail .detail-desc {
+    font-size: 0.75rem !important;
+    margin-bottom: 0.6rem !important;
+    -webkit-line-clamp: 3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  #modal-detail .screenshot-gallery {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.3rem !important;
+    margin-bottom: 0.6rem !important;
+  }
+  
+  #modal-detail .screenshot-item {
+    height: 45px !important;
+    font-size: 0.55rem !important;
+  }
+  
+  #modal-detail .detail-actions {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 0.4rem !important;
+    margin-top: 0.5rem !important;
+  }
+  
+  #modal-detail .detail-actions .btn-play-large,
+  #modal-detail .detail-actions .btn-buy-large {
+    flex: 1 !important;
+    min-width: 100px !important;
+    padding: 0.6rem 0.7rem !important;
+    font-size: 0.75rem !important;
+    min-height: 40px !important;
+    width: auto !important;
+  }
+  
+  #modal-detail .detail-actions .btn-fav-icon {
+    flex: 0 0 44px !important;
+    width: 44px !important;
+    height: 40px !important;
+    font-size: 1rem !important;
+  }
+}
+
+/* ============================================================
+   MÀN HÌNH LỚN (trên 1600px)
+   ============================================================ */
+@media (min-width: 1600px) {
+  .main-content {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+  
+  .game-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+/* ============================================================
+   TOUCH DEVICE
+   ============================================================ */
+@media (hover: none) and (pointer: coarse) {
+  .cursor-ring,
+  .cursor-ripple {
+    display: none !important;
+  }
+  body { cursor: auto !important; }
 }
