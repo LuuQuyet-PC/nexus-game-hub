@@ -1503,125 +1503,12 @@ body {
 /* ============================================================
    RESPONSIVE — MOBILE (dưới 768px)
    ============================================================ */
-@media (max-width: 768px) {
-  .header-center {
-    margin: 0 0.5rem;
-  }
-  
-  .header-right .btn-primary {
-    display: none;
-  }
-  
-  .slide-content { max-width: 100%; }
-  
-  .slide-actions {
-    flex-direction: column;
-  }
-  
-  .btn-play-large,
-  .btn-secondary-large {
-    width: 100%;
-    text-align: center;
-  }
-  
-  .carousel-nav { display: none; }
-  
-  .crazy-spotlight {
-    gap: var(--gap-small);
-  }
-  
-  .spotlight-side-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--gap-small);
-  }
-  
-  .category-cards-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--gap-small);
-  }
-  
-  .game-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--gap-small);
-  }
-  
-  .game-actions {
-    flex-direction: column;
-  }
-  
-  .btn-card-buy,
-  .btn-card-demo {
-    width: 100%;
-  }
-  
-  .detail-actions {
-    flex-direction: column;
-  }
-  
-  .btn-play-large,
-  .btn-buy-large,
-  .btn-fav-icon {
-    width: 100%;
-  }
-  
-  .btn-fav-icon {
-    height: 44px;
-  }
-  
-  .modal-buttons {
-    flex-direction: column-reverse;
-  }
-  
-  .modal-buttons button {
-    width: 100%;
-  }
-  
-  .player-info strong {
-    max-width: 50vw;
-  }
-  
-  /* Ẩn custom cursor trên mobile */
-  .cursor-ring,
-  .cursor-ripple {
-    display: none !important;
-  }
-  
-  body { cursor: auto !important; }
-}
+
 
 /* ============================================================
    RESPONSIVE — MOBILE NHỎ (dưới 480px)
    ============================================================ */
-@media (max-width: 480px) {
-  .brand span {
-    display: none;
-  }
-  
-  .slide-title {
-    font-size: 1.1rem;
-  }
-  
-  .category-cards-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  
-  .game-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .spotlight-side-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .screenshot-gallery {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  
-  .player-controls {
-    width: 100%;
-    justify-content: space-between;
-  }
-}
+
 
 /* ============================================================
    LANDSCAPE MODE (màn hình ngang, chiều cao thấp)
@@ -1909,5 +1796,197 @@ body {
     margin: 0;
     padding: 0;
     border: none;
+  }
+}
+/* ============================================================
+   MODAL DETAIL — MOBILE FINAL FIX
+   Dán CUỐI file, đảm bảo không có gì đè lên
+   ============================================================ */
+
+/* ===== RESET CACHE CSS TRÊN MOBILE ===== */
+@media (max-width: 768px) {
+  
+  /* === BADGE TRONG MODAL === */
+  #modal-detail .detail-header .badge {
+    display: inline-block !important;
+    width: auto !important;
+    max-width: fit-content !important;
+    padding: 0.25rem 0.6rem !important;
+    border-radius: 4px !important;
+    font-size: 0.65rem !important;
+    font-weight: 800 !important;
+    font-family: 'Orbitron', sans-serif !important;
+    align-self: flex-start !important;
+    margin: 0 0 0.4rem 0 !important;
+    background: var(--accent-magenta) !important;
+    color: #fff !important;
+    z-index: 3 !important;
+    position: relative !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* === DETAIL HEADER === */
+  #modal-detail .detail-header {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    align-items: flex-start !important;
+    height: 130px !important;
+    min-height: 130px !important;
+    max-height: 130px !important;
+    padding: 0.8rem !important;
+    overflow: hidden !important;
+    position: relative !important;
+  }
+  
+  #modal-detail .detail-header h2 {
+    font-size: 1.1rem !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    z-index: 2 !important;
+    position: relative !important;
+  }
+  
+  /* === DETAIL BODY === */
+  #modal-detail .detail-body {
+    padding: 0.9rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  /* === DETAIL META === */
+  #modal-detail .detail-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.4rem 0.7rem !important;
+    margin-bottom: 0.7rem !important;
+    font-size: 0.72rem !important;
+  }
+  
+  #modal-detail .meta-price {
+    font-size: 0.9rem !important;
+    font-weight: 800 !important;
+  }
+  
+  /* === DETAIL DESC === */
+  #modal-detail .detail-desc {
+    font-size: 0.78rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 0.8rem !important;
+  }
+  
+  /* === SUB HEADING === */
+  #modal-detail .sub-heading {
+    font-size: 0.68rem !important;
+    margin-bottom: 0.4rem !important;
+    letter-spacing: 0.5px !important;
+  }
+  
+  /* === SCREENSHOT GALLERY === */
+  #modal-detail .screenshot-gallery {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.35rem !important;
+    margin-bottom: 0.8rem !important;
+  }
+  
+  #modal-detail .screenshot-item {
+    height: 55px !important;
+    font-size: 0.55rem !important;
+    border-radius: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* === NÚT HÀNH ĐỘNG — QUAN TRỌNG NHẤT === */
+  #modal-detail .detail-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    padding-top: 0.6rem !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  
+  #modal-detail .detail-actions .btn-play-large,
+  #modal-detail .detail-actions .btn-buy-large {
+    display: block !important;
+    width: 100% !important;
+    padding: 0.7rem 0.8rem !important;
+    font-size: 0.8rem !important;
+    min-height: 44px !important;
+    height: auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    text-align: center !important;
+  }
+  
+  #modal-detail .detail-actions .btn-fav-icon {
+    display: block !important;
+    width: 100% !important;
+    height: 42px !important;
+    font-size: 1.1rem !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* === MODAL BACKDROP === */
+  #modal-detail.modal-backdrop {
+    padding: 0.5rem !important;
+    align-items: flex-start !important;
+    padding-top: 0.8rem !important;
+    overflow-y: auto !important;
+  }
+  
+  /* === MODAL CONTENT === */
+  #modal-detail .modal-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    border-radius: 12px !important;
+    max-height: calc(100vh - 1.6rem) !important;
+    max-height: calc(100dvh - 1.6rem) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+  
+  #modal-detail .modal-detail-card {
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+}
+
+/* ===== MOBILE RẤT NHỎ (dưới 400px) ===== */
+@media (max-width: 400px) {
+  #modal-detail .detail-header {
+    height: 110px !important;
+    min-height: 110px !important;
+  }
+  
+  #modal-detail .detail-header h2 {
+    font-size: 1rem !important;
+  }
+  
+  #modal-detail .detail-meta {
+    font-size: 0.68rem !important;
+    gap: 0.3rem 0.5rem !important;
+  }
+  
+  #modal-detail .screenshot-gallery {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  #modal-detail .screenshot-item {
+    height: 60px !important;
   }
 }
