@@ -140,18 +140,18 @@ const DEFAULT_GAMES_DATABASE = [
   },
   {
     id: "g-10",
-    title: "Crazy Chameleon",
+    title: "Shotting online",
     category: "Puzzle",
     price: 0.00,
     rating: 4.5,
     playCount: "920K",
     coverColor: "linear-gradient(135deg, #1abc9c, #16a085)",
-    coverImage: "assets/covers/CrazyChameleon.jpg",
+    coverImage: "assets/covers/ShottingOnline.jpg",
     badge: "MỚI",
     isHot: false,
     isNew: true,
-    desc: "Giải đố vui nhộn với chú tắc kè hoa, thay đổi màu sắc để vượt ải.",
-    gameUrl: "https://games.crazygames.com/vi_VN/crazy-chameleon/index.html"
+    desc: "Game bắn súng kĩ năng cao",
+    gameUrl: "https://games.crazygames.com/vi_VN/zombie-hunter/index.html"
   },
   {
     id : "g-11",
@@ -166,7 +166,7 @@ const DEFAULT_GAMES_DATABASE = [
     isHot : true,
     isNew : false,
     desc : "Chơi cờ vua miễn phí với đối thủ AI hoặc người chơi khác.",
-    gameUrl :"https://games.crazygames.com/vi_VN/chess-free/index.html"
+    gameUrl :"https://games.crazygames.com/vi_VN/the-chess-fiq/index.html"
 
   }
 ];
