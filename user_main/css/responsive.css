@@ -1,0 +1,28 @@
+/* ==================== RESPONSIVE BREAKPOINTS ==================== */
+@media (max-width: 1199px) {
+  .sidebar {
+    position: fixed;
+    top: var(--header-height);
+    left: -100%;
+    bottom: 0;
+    z-index: 999;
+    transition: left 0.3s ease;
+  }
+  .sidebar.open { left: 0; }
+  .hamburger-btn { display: flex; }
+  .crazy-spotlight { grid-template-columns: 1fr; }
+  .spotlight-hero { height: 280px; }
+}
+
+@media (max-width: 768px) {
+  .header { padding: 0 1rem; }
+  .nav-links { display: none; }
+  .header-center { margin: 0 0.5rem; }
+  .main-content { padding: 1.2rem; }
+  .hero-carousel { height: 320px; }
+  .slide-title { font-size: 1.6rem; }
+  .game-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+  .footer-grid { grid-template-columns: 1fr; }
+  #cursor-bubble, #cursor-dot, .cursor-ring, .cursor-ripple { display: none !important; }
+  * { cursor: auto !important; }
+}

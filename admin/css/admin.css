@@ -1,0 +1,396 @@
+/* ============================================================ */
+/* ADMIN DASHBOARD STYLES */
+/* ============================================================ */
+
+.admin-body {
+  display: flex;
+  background-color: #05070a;
+  height: 100vh; /* Fix lỗi scroll */
+  margin: 0;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ==================== SIDEBAR ==================== */
+.admin-sidebar {
+  width: 260px;
+  background: #0b0e14;
+  border-right: 1px solid rgba(0, 240, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.admin-brand {
+  padding: 2rem 1.5rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.admin-brand span { color: #00f0ff; text-shadow: 0 0 10px #00f0ff; }
+
+.admin-menu {
+  list-style: none;
+  padding: 1.5rem 1rem;
+  flex: 1;
+  margin: 0;
+}
+
+.admin-menu li {
+  padding: 1rem;
+  color: #8b9bb4;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.admin-menu li:hover { background: rgba(0, 240, 255, 0.05); color: #fff; }
+.admin-menu li.active {
+  background: rgba(0, 240, 255, 0.1);
+  color: #00f0ff;
+  border-left: 4px solid #00f0ff;
+}
+
+.btn-logout {
+  margin: 1rem;
+  padding: 1rem;
+  background: rgba(255, 0, 85, 0.1);
+  color: #ff0055;
+  border: 1px solid #ff0055;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+.btn-logout:hover { background: #ff0055; color: #fff; box-shadow: 0 0 15px rgba(255, 0, 85, 0.5); }
+
+/* ==================== MAIN CONTENT ==================== */
+.admin-main { 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  height: 100vh;
+  overflow-y: auto; 
+}
+
+.admin-header {
+  height: 72px;
+  background: #0b0e14;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  flex-shrink: 0;
+}
+
+.admin-header h2 { font-family: 'Orbitron', sans-serif; color: #fff; margin: 0; font-size: 1.2rem; }
+.admin-info { display: flex; align-items: center; gap: 1rem; color: #8b9bb4; font-weight: 600; }
+
+.admin-avatar {
+  padding: 0.4rem 1rem;
+  background: linear-gradient(135deg, #00f0ff, #0077ff);
+  color: #000;
+  border-radius: 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 900;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+}
+
+.admin-content { 
+  padding: 2rem; 
+  flex: 1; 
+  padding-bottom: 5rem; /* Tránh bị che ở đáy */
+}
+
+/* ==================== TABS ==================== */
+.tab-content { display: none; animation: fadeIn 0.3s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ==================== KPI CARDS ==================== */
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+
+.kpi-card {
+  background: #111724;
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.kpi-icon { font-size: 2.5rem; }
+.kpi-data h3 { font-family: 'Orbitron', sans-serif; font-size: 2rem; color: #00f0ff; margin: 0 0 0.5rem 0; }
+.kpi-data p { color: #8b9bb4; margin: 0; font-size: 0.9rem; }
+
+/* ==================== CHART ==================== */
+.chart-container {
+  background: #111724;
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  border-radius: 16px;
+  padding: 1.5rem;
+  height: 350px;
+}
+.chart-container h3 { color: #fff; margin-top: 0; margin-bottom: 1.5rem; font-family: 'Orbitron', sans-serif; font-size: 1rem; }
+
+/* ==================== TABLES ==================== */
+.table-card { background: #111724; border: 1px solid rgba(0, 240, 255, 0.15); border-radius: 16px; padding: 1.5rem; }
+.table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.table-header h3 { color: #fff; margin: 0; font-family: 'Orbitron', sans-serif; }
+
+.table-responsive { overflow-x: auto; }
+.admin-table { width: 100%; border-collapse: collapse; }
+.admin-table th {
+  text-align: left; padding: 1rem; color: #8b9bb4;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.85rem; text-transform: uppercase;
+}
+.admin-table td { padding: 1rem; color: #fff; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 0.95rem; vertical-align: middle; }
+.admin-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+/* ẢNH THUMBNAIL TRONG BẢNG */
+.game-thumb-admin {
+  width: 60px; height: 40px;
+  border-radius: 6px;
+  background-size: cover; background-position: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Ô INPUT CHỈNH GIÁ TIỀN */
+.price-input {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: #00f0ff;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: bold;
+  width: 80px;
+  padding: 0.4rem;
+  border-radius: 6px;
+  text-align: center;
+}
+.price-input:focus { outline: none; border-color: #00f0ff; box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+
+.btn-danger {
+  background: rgba(255, 0, 85, 0.15); color: #ff0055;
+  border: 1px solid #ff0055; padding: 0.4rem 0.8rem;
+  border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;
+}
+.btn-danger:hover { background: #ff0055; color: #fff; }
+
+/* ==================== SETTINGS TAB ==================== */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.settings-section {
+  background: #111724;
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.section-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-header h3 { color: #00f0ff; margin: 0 0 0.5rem 0; font-family: 'Orbitron', sans-serif; font-size: 1.1rem; }
+.section-header p { color: #8b9bb4; margin: 0; font-size: 0.85rem; }
+
+.form-group { margin-bottom: 1.5rem; }
+.form-group label { display: block; color: #8b9bb4; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 600; }
+.form-group input[type="text"], .form-group input[type="email"], .form-group select {
+  width: 100%; padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-family: inherit; font-size: 0.95rem; outline: none;
+}
+.form-group input:focus, .form-group select:focus { border-color: #00f0ff; background: rgba(0, 240, 255, 0.05); }
+.form-group select option { background: #111724; color: #fff; }
+
+/* Toggle Switch */
+.toggle-group {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.toggle-group:last-child { border-bottom: none; }
+.toggle-info strong { display: block; color: #fff; font-size: 0.95rem; margin-bottom: 0.2rem; }
+.toggle-info span { color: #8b9bb4; font-size: 0.8rem; }
+
+.switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #2c3e50; transition: .4s; border-radius: 34px;
+}
+.slider:before {
+  position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px;
+  background-color: white; transition: .4s; border-radius: 50%;
+}
+input:checked + .slider { background-color: #00f0ff; box-shadow: 0 0 10px rgba(0, 240, 255, 0.4); }
+input:checked + .slider:before { transform: translateX(24px); }
+
+/* ==================== TASK MANAGER (SERVER TAB) ==================== */
+.tm-graphs-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1rem; margin-bottom: 2rem;
+}
+
+.tm-graph-card {
+  background: #111724; border: 1px solid rgba(0, 240, 255, 0.15);
+  border-radius: 12px; padding: 1rem; height: 200px; display: flex; flex-direction: column;
+}
+
+.tm-graph-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1rem; font-size: 0.9rem; color: #8b9bb4; font-weight: 600;
+}
+
+.tm-graph-header strong { color: #00f0ff; font-family: 'Orbitron', sans-serif; font-size: 1.1rem; }
+.tm-graph-canvas { flex: 1; position: relative; width: 100%; }
+
+.tm-processes-card {
+  background: #111724; border: 1px solid rgba(0, 240, 255, 0.15);
+  border-radius: 12px; padding: 1.5rem;
+}
+
+.tm-processes-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 1rem;
+}
+
+.tm-processes-header h3 { margin: 0; color: #00f0ff; font-family: 'Orbitron', sans-serif; }
+
+.tm-table th, .tm-table td { padding: 0.8rem 1rem; }
+.tm-table td { color: #e0e0e0; font-size: 0.9rem; border-bottom: 1px solid rgba(255, 255, 255, 0.02); }
+
+.tm-status-ok {
+  color: #2ecc71; font-weight: bold; display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.tm-status-ok::before {
+  content: ''; width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; box-shadow: 0 0 8px #2ecc71;
+}
+
+.tm-bar-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.tm-bar-fill { height: 100%; background: #00f0ff; border-radius: 3px; }
+
+/* ==================== TOAST ==================== */
+.admin-toast-container {
+  position: fixed; top: 20px; right: 20px; z-index: 99999;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.admin-toast {
+  background: #111724; color: #fff; border-left: 4px solid #00f0ff;
+  padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  font-size: 0.9rem; display: flex; align-items: center; gap: 10px;
+  animation: slideInRight 0.3s ease forwards;
+}
+.admin-toast.error { border-left-color: #ff0055; }
+@keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes fadeOut { to { opacity: 0; } }
+
+/* ==================== USER DETAIL MODAL ==================== */
+.user-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.detail-card {
+  background: #0b0e14;
+  padding: 1.2rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  text-align: center;
+}
+.detail-card h4 { margin: 0 0 0.5rem 0; color: #8b9bb4; font-size: 0.9rem; text-transform: uppercase;}
+.history-section { margin-bottom: 1.5rem; }
+.history-section h4 { color: #fff; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; font-size: 0.95rem;}
+.history-list {
+  list-style: none; padding: 0; margin: 0; max-height: 120px; overflow-y: auto;
+  background: #0b0e14; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);
+}
+.history-list li {
+  padding: 0.6rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.85rem; color: #e0e0e0; display: flex; justify-content: space-between;
+}
+.history-list li:last-child { border-bottom: none; }
+.history-list li span { color: #8b9bb4; font-size: 0.8rem; }
+/* ==================== KHUNG VỎ MODAL BẬT LÊN ==================== */
+.admin-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85); /* Nền đen mờ */
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden; /* Ẩn mặc định */
+  transition: all 0.3s ease;
+}
+
+/* Khi có class active (do JS thêm vào) thì hiện lên */
+.admin-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.admin-modal-content {
+  background: #111724;
+  border: 1px solid #00f0ff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+  transform: translateY(-20px); /* Hiệu ứng trượt nhẹ */
+  transition: all 0.3s ease;
+}
+
+.admin-modal.active .admin-modal-content {
+  transform: translateY(0);
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #00f0ff;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.btn-close:hover {
+  color: #ff0055;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}

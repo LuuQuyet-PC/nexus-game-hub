@@ -1,0 +1,43 @@
+/* ==================== 10. FOOTER ==================== */
+.footer {
+  background: rgba(11, 14, 20, 0.85);
+  border-top: 1px solid var(--glass-border);
+  padding: 4rem 2rem 2rem 2rem;
+  margin-top: 5rem;
+}
+
+.footer-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 2.5rem;
+}
+
+.footer-col h4 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+  color: var(--accent-cyan);
+}
+
+.footer-about {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-top: 0.8rem;
+}
+
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.footer-col ul a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; cursor: pointer; }
+.footer-col ul a:hover { color: var(--accent-cyan); }
+.social-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem; }
+.social-badge {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.copyright { font-size: 0.78rem; color: var(--text-muted); }

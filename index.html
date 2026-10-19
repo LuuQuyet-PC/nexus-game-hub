@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>NEXUS//PLAY — Cổng Phân Phối Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NEXUS//PLAY - Khám phá thế giới game đa dạng, trải nghiệm những tựa game hấp dẫn và tìm kiếm trò chơi yêu thích của bạn ngay hôm nay.">
+  <meta name="keywords" content="NEXUS PLAY, web game, game online, chơi game trực tuyến, game miễn phí, game browser, game hub, trò chơi trực tuyến">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="./user_main/css/main.css">
+  <link rel="stylesheet" href="./user_main/css/header.css">
+  <link rel="stylesheet" href="./user_main/css/sidebar.css">
+  <link rel="stylesheet" href="./user_main/css/carousel.css">
+  <link rel="stylesheet" href="./user_main/css/toolbar.css">
+  <link rel="stylesheet" href="./user_main/css/spotlight.css">
+  <link rel="stylesheet" href="./user_main/css/game-grid.css">
+  <link rel="stylesheet" href="./user_main/css/modal.css">
+  <link rel="stylesheet" href="./user_main/css/player.css">
+  <link rel="stylesheet" href="./user_main/css/toast.css">
+  <link rel="stylesheet" href="./user_main/css/footer.css">
+  <link rel="stylesheet" href="./user_main/css/responsive.css">
+  <link rel="stylesheet" href="./user_main/css/auth.css">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <div class="cursor-ring" id="cursor-ring"></div>
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <button class="hamburger-btn" id="btn-hamburger">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="brand" onclick="app.resetToHome()">NEXUS<span>//PLAY</span></div>
+    </div>
+
+    <div class="header-center">
+      <div class="search-bar">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><!-- vẽ cái kính lúp-->
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="inp-search" placeholder="Tìm kiếm tựa game, thể loại..." autocomplete="off">
+        <button class="btn-clear-search" id="btn-clear-search">&times;</button><!--&times là cái x để xóa-->
+      </div>
+    </div>
+
+    <div class="header-right">
+      <nav class="nav-links">
+        <button class="nav-item active" data-filter="all">Khám Phá</button>
+        <button class="nav-item" data-filter="isNew">Mới Nhất</button>
+        <button class="nav-item" data-filter="isHot">Phổ Biến</button>
+        <button class="nav-item" id="tab-library-btn" onclick="app.requireLogin(() => app.switchView('library'))">Thư Viện Của Tôi</button>
+      </nav>
+
+      <button class="btn-primary" onclick="app.requireLogin(() => app.togglePublishModal(true))">+ ĐĂNG BÁN GAME</button>
+
+      <div class="user-profile" id="user-profile">
+        <div class="avatar" id="profile-avatar" onclick="app.handleAvatarClick()">NX</div>
+        <div class="profile-dropdown" id="profile-dropdown">
+          <div class="profile-header">
+            <span class="user-name" id="profile-username">CyberRider_99</span>
+            <span class="user-role">Thành viên VIP</span>
+          </div>
+          <div class="profile-balance">
+            <span>Ví NEXUS:</span>
+            <strong id="profile-balance-display">$128.50</strong>
+          </div>
+          <hr>
+          <button class="dropdown-item" onclick="app.requireLogin(() => app.changeUsername()); app.toggleProfileDropdown();">✏️ Đổi tên hiển thị</button>
+          <button class="dropdown-item" onclick="app.requireLogin(() => app.switchView('library')); app.toggleProfileDropdown();">📚 Kho game sở hữu</button>
+          <button class="dropdown-item" onclick="app.requireLogin(() => app.switchView('favorites')); app.toggleProfileDropdown();">❤️ Game yêu thích</button>
+          <button class="dropdown-item" onclick="app.requireLogin(() => app.depositMoney(50));">💰 Nạp tiền ví (+$50)</button>
+          <button class="dropdown-item" onclick="authModule.logout()" style="color: var(--accent-magenta);">🚪 Đăng xuất</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- BODY -->
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-title">DANH MỤC THỂ LOẠI</div>
+      <ul class="category-list" id="category-list"></ul>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <div id="store-view" class="view-panel active">
+        
+        <section class="hero-carousel" id="hero-carousel">
+          <div class="carousel-track" id="carousel-track"></div>
+          <button class="carousel-nav prev" id="carousel-prev">&#10094;</button>
+          <button class="carousel-nav next" id="carousel-next">&#10095;</button>
+          <div class="carousel-indicators" id="carousel-indicators"></div>
+        </section>
+
+        <div class="toolbar">
+          <div class="results-count" id="results-count">Hiển thị tất cả trò chơi</div>
+          <div class="sort-box">
+            <label for="sort-select">Sắp xếp theo:</label>
+            <select id="sort-select" onchange="app.handleSort(this.value)">
+              <option value="featured">Mặc định / Nổi bật</option>
+              <option value="rating">Đánh giá cao nhất</option>
+              <option value="popular">Lượt chơi nhiều nhất</option>
+              <option value="price-asc">Giá: Thấp đến Cao</option>
+              <option value="price-desc">Giá: Cao đến Thấp</option>
+            </select>
+          </div>
+        </div>
+
+        <section class="home-section" id="popular-section">
+          <div class="section-header">
+            <h2 class="section-title">TOP THỊNH HÀNH HÔM NAY</h2>
+            <button class="btn-link" onclick="app.applyCategoryFilter('all')">Xem thêm &gt;</button>
+          </div>
+          <div class="crazy-spotlight" id="popular-spotlight"></div>
+        </section>
+
+        <section class="home-section" id="category-cards-section">
+          <div class="section-header">
+            <h2 class="section-title">KHÁM PHÁ THEO THỂ LOẠI</h2>
+          </div>
+          <div class="category-cards-grid" id="category-cards-grid"></div>
+        </section>
+
+        <section class="home-section" id="all-games-section">
+          <div class="section-header">
+            <h2 class="section-title" id="main-grid-title">TẤT CẢ TRÒ CHƠI</h2>
+          </div>
+          <div class="game-grid" id="game-grid"></div>
+        </section>
+      </div>
+
+      <div id="library-view" class="view-panel">
+        <div class="library-header">
+          <h2 class="section-title" id="library-title">THƯ VIỆN BẢN QUYỀN CỦA BẠN</h2>
+          <p class="section-subtitle">Toàn bộ trò chơi đã kích hoạt bản quyền CD-Key gắn liền với tài khoản của bạn.</p>
+        </div>
+        <div class="game-grid" id="library-grid"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL DETAIL -->
+  <div class="modal-backdrop" id="modal-detail">
+    <div class="modal-content modal-detail-card">
+      <button class="modal-close" onclick="app.closeDetailModal()">&times;</button>
+      <div class="detail-header" id="detail-header-cover">
+        <span class="badge badge-hot" id="detail-badge">HOT</span>
+        <h2 id="detail-title">Tên Trò Chơi</h2>
+      </div>
+      <div class="detail-body">
+        <div class="detail-meta">
+          <span class="meta-tag" id="detail-category">Action</span>
+          <span class="meta-rating" id="detail-rating">★ 4.9</span>
+          <span class="meta-plays" id="detail-plays">👁 120,000 lượt chơi</span>
+          <span class="meta-price" id="detail-price">$29.99</span>
+        </div>
+        <p class="detail-desc" id="detail-desc">Mô tả game chi tiết...</p>
+
+        <h4 class="sub-heading">ẢNH CHỤP MÀN HÌNH (SCREENSHOTS)</h4>
+        <div class="screenshot-gallery" id="detail-screenshots"></div>
+
+        <div class="detail-actions">
+          <button class="btn-play-large" id="btn-detail-play">▶ CHƠI NGAY MIỄN PHÍ</button>
+          <button class="btn-buy-large" id="btn-detail-buy">MUA BẢN QUYỀN SỐ</button>
+          <button class="btn-fav-icon" id="btn-detail-fav" title="Lưu vào mục yêu thích">❤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME PLAYER -->
+  <div class="game-player-overlay" id="game-player">
+    <div class="player-topbar">
+      <div class="player-info">
+        <span class="pulsing-dot"></span>
+        <strong id="player-game-title">Tên Trò Chơi Đang Chạy</strong>
+      </div>
+      <div class="player-controls">
+        <button class="btn-control" onclick="app.reloadPlayer()">↻ Reload</button>
+        <button class="btn-control" onclick="app.toggleFullScreen()">⛶ Fullscreen</button>
+        <button class="btn-control btn-close-player" onclick="app.closePlayer()">✕ Đóng</button>
+      </div>
+    </div>
+    <div class="player-iframe-container">
+      <div class="player-spinner" id="player-spinner">
+        <div class="cyber-spinner"></div>
+        <p>ĐANG KHỞI TẠO KHÔNG GIAN GAME...</p>
+      </div>
+      <iframe id="game-iframe" src="" frameborder="0" allow="autoplay; fullscreen; gamepad"></iframe>
+    </div>
+  </div>
+
+  <!-- MODAL PUBLISH -->
+  <div class="modal-backdrop" id="modal-publish">
+    <div class="modal-content">
+      <button class="modal-close" onclick="app.togglePublishModal(false)">&times;</button>
+      <h2 class="form-title">ĐĂNG TẢI TRÒ CHƠI MỚI</h2>
+      <form id="publish-form" onsubmit="app.handlePublishSubmit(event)">
+        <div class="form-group">
+          <label>Tên trò chơi *</label>
+          <input type="text" id="pub-title" required placeholder="Ví dụ: Star Drift Zero">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Thể loại *</label>
+            <select id="pub-category">
+              <option value="Action">Hành động (Action)</option>
+              <option value="Racing">Đua xe (Racing)</option>
+              <option value="Shooting">Bắn súng (Shooting)</option>
+              <option value="RPG">Nhập vai (RPG)</option>
+              <option value="Strategy">Chiến thuật (Strategy)</option>
+              <option value="Puzzle">Trí tuệ (Puzzle)</option>
+              <option value="Sports">Thể thao (Sports)</option>
+              <option value="Horror">Kinh dị (Horror)</option>
+              <option value="2 Player">2 Người chơi</option>
+              <option value=".io">.io Games</option>
+              <option value="Casual">Casual / Indie</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Giá bán ($ USD) *</label>
+            <input type="number" step="0.01" id="pub-price" required placeholder="19.99">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>URL Chơi Demo (HTML5 Game iframe)</label>
+          <input type="url" id="pub-url" placeholder="https://html-classic.itch.zone/html/.../index.html">
+        </div>
+        <div class="form-group">
+          <label>Mô tả trò chơi</label>
+          <textarea id="pub-desc" rows="3" placeholder="Tóm tắt tính năng..."></textarea>
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" onclick="app.togglePublishModal(false)">Hủy</button>
+          <button type="submit" class="btn-primary">Xác Nhận Đăng Bán</button>
+        </div>
+      </form>
+    </div>
+  </div>
+    <!-- ==================== MODAL ĐĂNG NHẬP / ĐĂNG KÝ ==================== -->
+  <div class="modal-backdrop" id="modal-auth">
+    <div class="modal-content">
+      <button class="modal-close" onclick="app.toggleAuthModal(false)">&times;</button>
+      
+      <!-- Tab chuyển Đăng nhập / Đăng ký -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="app.switchAuthTab('login')">ĐĂNG NHẬP</button>
+        <button class="auth-tab" id="tab-register" onclick="app.switchAuthTab('register')">ĐĂNG KÝ</button>
+      </div>
+
+      <!-- Form Đăng Nhập -->
+      <form id="form-login" onsubmit="app.handleLogin(event)" style="display: block;">
+        <div class="form-group">
+          <label>Tên đăng nhập</label>
+          <input type="text" id="login-username" required placeholder="Nhập tên đăng nhập...">
+        </div>
+        <div class="form-group">
+          <label>Mật khẩu</label>
+          <input type="password" id="login-password" required placeholder="Nhập mật khẩu...">
+        </div>
+        <div class="auth-error" id="login-error"></div>
+        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">XÁC NHẬN ĐĂNG NHẬP</button>
+      </form>
+
+      <!-- Form Đăng Ký -->
+      <form id="form-register" onsubmit="app.handleRegister(event)" style="display: none;">
+        <div class="form-group">
+          <label>Tên đăng nhập mới</label>
+          <input type="text" id="reg-username" required placeholder="Ví dụ: CyberRider">
+        </div>
+        <div class="form-group">
+          <label>Mật khẩu</label>
+          <input type="password" id="reg-password" required placeholder="Tối thiểu 8 ký tự...">
+          <small style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-top: 0.3rem;">
+            * Yêu cầu: Trên 8 ký tự, có ít nhất 1 chữ HOA, 1 chữ thường và 1 số.
+          </small>
+        </div>
+        <div class="auth-error" id="register-error"></div>
+        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">TẠO TÀI KHOẢN</button>
+      </form>
+    </div>
+  </div>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="brand">NEXUS<span>//PLAY</span></div>
+        <p class="footer-about">
+          Cổng phân phối trò chơi số bản quyền thế hệ mới. Nền tảng kết hợp công nghệ WebGL 3D, thanh toán mô phỏng bản quyền CD-Key và hệ sinh thái thư viện cá nhân chuẩn tương lai.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>THỂ LOẠI HOT</h4>
+        <ul>
+          <li><a href="javascript:void(0)" onclick="app.applyCategoryFilter('Action')">Game Hành Động</a></li>
+          <li><a href="javascript:void(0)" onclick="app.applyCategoryFilter('Shooting')">Game Bắn Súng</a></li>
+          <li><a href="javascript:void(0)" onclick="app.applyCategoryFilter('Racing')">Game Đua Xe Tốc Độ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>NHÀ PHÁT TRIỂN</h4>
+        <ul>
+          <li><a href="javascript:void(0)" onclick="app.requireLogin(() => app.togglePublishModal(true))">Cổng Đăng Tải Game</a></li>
+          <li><a href="javascript:void(0)" onclick="toast.show('Tài liệu API đang cập nhật!', 'info')">Tài Liệu SDK WebGL</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>KẾT NỐI</h4>
+        <div class="social-links">
+          <span class="social-badge">Discord </span>
+          <span class="social-badge">YouTube</span>
+        </div>
+        <p class="copyright">© 2026 NEXUS//PLAY Platform - Make by Lưu Quyết.</p>
+        <p class="copyright">zalo : 0346067742</p>
+        <p class="copyright">Gọi bố ko nghe đâu ! Nhắn zalo thì bố mới rep</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="./user_main/js/utils.js"></script>
+  <script src="./user_main/js/data.js"></script>
+  <script src="./user_main/js/toast.js"></script>
+  <script src="./user_main/js/tracking.js"></script>
+  <script src="./user_main/js/carousel.js"></script>
+  <script src="./user_main/js/auth.js"></script>
+  <script src="./user_main/js/sidebar.js"></script>
+  <script src="./user_main/js/filter.js"></script>
+  <script src="./user_main/js/category.js"></script>
+  <script src="./user_main/js/spotlight.js"></script>
+  <script src="./user_main/js/game-grid.js"></script>
+  <script src="./user_main/js/modal.js"></script>
+  <script src="./user_main/js/player.js"></script>
+  <script src="./user_main/js/profile.js"></script>
+  <script src="./user_main/js/app.js"></script>
+  
+</body>
+</html>

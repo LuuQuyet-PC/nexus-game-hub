@@ -1,0 +1,163 @@
+/* ============================================================
+   NEXUS//PLAY — MAIN STYLES
+   ============================================================ */
+
+:root {
+  --bg-color: #0b0e14;
+  --bg-secondary: #121824;
+  --glass-card: rgba(18, 24, 38, 0.72);
+  --glass-border: rgba(0, 240, 255, 0.22);
+  --glass-border-hover: rgba(0, 240, 255, 0.65);
+  
+  --accent-cyan: #00f0ff;
+  --accent-magenta: #ff0055;
+  --accent-purple: #8e44ad;
+  --accent-gold: #f39c12;
+  --accent-green: #2ecc71;
+  
+  --text-main: #f0f4fc;
+  --text-muted: #8b9bb4;
+  --header-height: 72px;
+  --sidebar-width: 250px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;/* Loại bỏ cái màu khi kích vào mặc định của web*/
+}
+
+html {
+  scroll-behavior: smooth;/* Tạo sự mượt mà khi chuyển cảnh scroll*/
+  font-size: 16px;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden; /* Tránh tràn theo chiều x*/
+  position: relative;/* Đặt phần tử ở vị trí tương đối so với vị trí ban đầu của chính nó phân tư con dùng position: absolute*/
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;/* nét chữ kiểu răng cưa (antialiased)*/
+  cursor: default;
+}
+
+#bg-canvas {
+  position: fixed;/*có định ở top và left còn stinky đến đâu đó mới cố định*/
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ==================== CUSTOM CURSOR ==================== */
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--accent-cyan);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease;
+  box-shadow: 
+    0 0 12px rgba(0, 240, 255, 0.6),
+    inset 0 0 12px rgba(0, 240, 255, 0.3);
+}
+
+.cursor-ring.hover-active {
+  width: 52px;
+  height: 52px;
+  border-color: var(--accent-magenta);
+  box-shadow: 
+    0 0 20px rgba(255, 0, 85, 0.7),
+    inset 0 0 16px rgba(255, 0, 85, 0.4);
+}
+
+.cursor-ripple {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--accent-cyan);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%, -50%);
+  animation: waterRipple 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+.cursor-ripple.delay {
+  animation: waterRipple 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) 0.15s forwards;
+}
+
+@keyframes waterRipple {
+  0% { width: 20px; height: 20px; opacity: 1; border-width: 3px; }
+  50% { opacity: 0.6; }
+  100% { width: 120px; height: 120px; opacity: 0; border-width: 1px; }
+}
+
+/* ==================== LAYOUT ==================== */
+.app-layout {
+  display: flex;
+  min-height: calc(100vh - var(--header-height));
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem;
+  max-width: 1600px;
+  overflow-x: hidden;
+}
+
+.view-panel { display: none; }
+.view-panel.active { display: block; }
+
+/* ==================== SECTIONS ==================== */
+.home-section { margin-bottom: 3.5rem; }
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.4rem;
+}
+
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 10px var(--accent-cyan);
+  flex-shrink: 0;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--accent-cyan);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}

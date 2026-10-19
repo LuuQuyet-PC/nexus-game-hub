@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXUS//ADMIN — Hệ Thống Quản Trị</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./user_main/css/main.css">
+  <link rel="stylesheet" href="./admin/css/admin.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="admin-body">
+
+  <!-- SIDEBAR BÊN TRÁI -->
+  <aside class="admin-sidebar">
+    <div class="admin-brand">NEXUS<span>//ADMIN</span></div>
+
+    <ul class="admin-menu">
+      <li class="active" data-tab="overview" onclick="switchTab('overview')">📊 Tổng Quan</li>
+      <li data-tab="users" onclick="switchTab('users')">👥 Quản Lý User</li>
+      <li data-tab="games" onclick="switchTab('games')">🎮 Kho Game</li>
+      <li data-tab="settings" onclick="switchTab('settings')">⚙️ Cài Đặt</li>
+      <li data-tab="server" onclick="switchTab('server')">🖥️ Máy Chủ (Server)</li>
+    </ul>
+
+    <button class="btn-logout" onclick="logoutAdmin()">Thoát Hệ Thống</button>
+  </aside>
+
+  <!-- NỘI DUNG BÊN PHẢI -->
+  <main class="admin-main">
+
+    <header class="admin-header">
+      <h2 id="page-title">Tổng Quan Hệ Thống</h2>
+
+      <div class="admin-info">
+        <span>👋 Chào, <strong id="admin-name">Admin</strong></span>
+        <div class="admin-avatar">ADMIN</div>
+      </div>
+    </header>
+
+    <!-- THẺ BAO NGOÀI CONTENT -->
+    <div class="admin-content">
+
+      <!-- TAB 1: TỔNG QUAN -->
+      <div id="tab-overview" class="tab-content active">
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon">👥</div>
+            <div class="kpi-data">
+              <h3 id="kpi-users">0</h3>
+              <p>Tài khoản đăng ký</p>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">🎮</div>
+            <div class="kpi-data">
+              <h3 id="kpi-games">0</h3>
+              <p>Tựa game trên hệ thống</p>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-data">
+              <h3 id="kpi-sales">0</h3>
+              <p>Lượt giao dịch mua</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <h3>Lưu lượng truy cập (Mô phỏng)</h3>
+          <canvas id="trafficChart"></canvas>
+        </div>
+      </div>
+
+      <!-- TAB 2: QUẢN LÝ USER -->
+      <div id="tab-users" class="tab-content">
+        <div class="table-card">
+          <div class="table-header">
+            <h3>Danh Sách Người Dùng</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Tên đăng nhập</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="admin-user-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: KHO GAME -->
+      <div id="tab-games" class="tab-content">
+        <div class="table-card">
+          <div class="table-header">
+            <h3>Quản Lý Kho Game</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Ảnh</th>
+                  <th>Tên Game</th>
+                  <th>Thể loại</th>
+                  <th>Giá bán ($)</th>
+                  <th>Đánh giá</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="admin-game-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: CÀI ĐẶT -->
+      <div id="tab-settings" class="tab-content">
+        <div class="settings-grid">
+          <div class="settings-section">
+            <div class="section-header">
+              <h3>🌐 Thông Tin Chung</h3>
+              <p>Cấu hình tên hiển thị và liên hệ của hệ thống.</p>
+            </div>
+            <div class="form-group">
+              <label for="set-site-name">Tên Website</label>
+              <input type="text" id="set-site-name" value="NEXUS//PLAY">
+            </div>
+            <div class="form-group">
+              <label for="set-email">Email hỗ trợ</label>
+              <input type="email" id="set-email" value="support@nexusplay.vn">
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="section-header">
+              <h3>🔒 Bảo Mật & Trạng Thái</h3>
+              <p>Kiểm soát người dùng và chế độ bảo trì.</p>
+            </div>
+            <div class="toggle-group">
+              <div class="toggle-info">
+                <strong>Chế độ bảo trì</strong>
+                <span>Tạm đóng cửa website để nâng cấp.</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="set-maintenance">
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="toggle-group">
+              <div class="toggle-info">
+                <strong>Cho phép đăng ký</strong>
+                <span>Người dùng mới có thể tạo tài khoản.</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="set-register" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 2rem;">
+          <button class="btn-primary" style="padding: 1rem 2rem; font-size: 1rem;" onclick="saveSettings()">LƯU CẤU HÌNH</button>
+        </div>
+      </div>
+
+      <!-- TAB 5: MÁY CHỦ (TASK MANAGER STYLE) -->
+      <div id="tab-server" class="tab-content">
+        <div class="tm-graphs-grid">
+          <div class="tm-graph-card">
+            <div class="tm-graph-header"><span>CPU</span><strong id="tm-cpu-val">0%</strong></div>
+            <div class="tm-graph-canvas"><canvas id="chart-cpu"></canvas></div>
+          </div>
+          <div class="tm-graph-card">
+            <div class="tm-graph-header"><span>Bộ nhớ (RAM)</span><strong id="tm-ram-val">0%</strong></div>
+            <div class="tm-graph-canvas"><canvas id="chart-ram"></canvas></div>
+          </div>
+          <div class="tm-graph-card">
+            <div class="tm-graph-header"><span>Ổ đĩa (Disk)</span><strong id="tm-disk-val">0%</strong></div>
+            <div class="tm-graph-canvas"><canvas id="chart-disk"></canvas></div>
+          </div>
+          <div class="tm-graph-card">
+            <div class="tm-graph-header"><span>Mạng (Network)</span><strong id="tm-net-val">0 Mbps</strong></div>
+            <div class="tm-graph-canvas"><canvas id="chart-net"></canvas></div>
+          </div>
+        </div>
+
+        <div class="tm-processes-card">
+          <div class="tm-processes-header">
+            <h3>Tiến trình (Processes)</h3>
+            <span style="color: #8b9bb4; font-size: 0.9rem;">Đang chạy: <strong id="tm-total-proc">0</strong> tiến trình</span>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table tm-table">
+              <thead>
+                <tr>
+                  <th>Tên tiến trình</th>
+                  <th>Trạng thái</th>
+                  <th>CPU</th>
+                  <th>Bộ nhớ (MB)</th>
+                  <th>Mạng</th>
+                </tr>
+              </thead>
+              <tbody id="tm-process-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- KẾT THÚC admin-content -->
+      <!-- MODAL CHI TIẾT USER -->
+  <div class="admin-modal" id="user-detail-modal">
+    <div class="admin-modal-content">
+      <div class="modal-header">
+        <h3>Hồ Sơ Người Dùng: <span id="detail-user-name" style="color: #00f0ff;">...</span></h3>
+        <button class="btn-close" onclick="closeUserModal()">✕</button>
+      </div>
+      <div class="modal-body" style="max-height: 65vh; overflow-y: auto;">
+        <div class="user-detail-grid">
+          <div class="detail-card">
+            <h4>Số dư ví</h4>
+            <p id="detail-user-balance" style="color: #2ecc71; font-size: 1.5rem; font-weight: bold; margin: 0;">$0.00</p>
+          </div>
+          <div class="detail-card">
+            <h4>Game sở hữu</h4>
+            <p id="detail-user-games" style="color: #f39c12; font-size: 1.5rem; font-weight: bold; margin: 0;">0</p>
+          </div>
+        </div>
+        
+        <div class="history-section">
+          <h4>Lịch sử đăng nhập (Gần nhất)</h4>
+          <ul id="detail-login-history" class="history-list"></ul>
+        </div>
+        
+        <div class="history-section">
+          <h4>Lịch sử chơi game (Gần nhất)</h4>
+          <ul id="detail-play-history" class="history-list"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  </main> <!-- KẾT THÚC admin-main -->
+
+  <script src="./user_main/js/data.js"></script>
+  <script src="./admin/js/users.js"></script>
+  <script src="./admin/js/admin.js"></script>
+</body>
+</html>

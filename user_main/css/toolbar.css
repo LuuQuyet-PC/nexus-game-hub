@@ -1,0 +1,34 @@
+/* ==================== TOOLBAR ==================== */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 0.8rem 1.2rem;
+  background: rgba(18, 24, 38, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
+
+.results-count {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.sort-box {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.sort-box select {
+  background: rgba(11, 14, 20, 0.8);
+  border: 1px solid var(--glass-border);
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+}

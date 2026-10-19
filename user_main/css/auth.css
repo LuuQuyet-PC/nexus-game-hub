@@ -1,0 +1,38 @@
+/* ==================== AUTH MODAL ==================== */
+.auth-tabs {
+  display: flex;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.auth-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.8rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.auth-tab.active {
+  color: var(--accent-cyan);
+  border-bottom-color: var(--accent-cyan);
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+}
+
+.auth-error {
+  color: var(--accent-magenta);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  padding: 0.6rem;
+  background: rgba(255, 0, 85, 0.1);
+  border: 1px solid var(--accent-magenta);
+  border-radius: 6px;
+  display: none;
+  text-align: center;
+}
