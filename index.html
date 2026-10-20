@@ -61,7 +61,7 @@
         <button class="nav-item" id="tab-library-btn" onclick="app.requireLogin(() => app.switchView('library'))">Thư Viện Của Tôi</button>
       </nav>
 
-      <button class="btn-primary" onclick="app.requireLogin(() => app.togglePublishModal(true))">+ ĐĂNG BÁN GAME</button>
+      <button class="btn-primary" onclick="app.requireLogin(() => app.togglePublishModal(true))">+ ĐĂNG TẢI GAME</button>
 
       <div class="user-profile" id="user-profile">
         <div class="avatar" id="profile-avatar" onclick="app.handleAvatarClick()">NX</div>
@@ -342,6 +342,9 @@
   <script src="./user_main/js/modal.js"></script>
   <script src="./user_main/js/player.js"></script>
   <script src="./user_main/js/profile.js"></script>
+  
+  
+  <!-- APP.JS LUÔN NẠP CUỐI CÙNG -->
   <script src="./user_main/js/app.js"></script>
   
 </body>

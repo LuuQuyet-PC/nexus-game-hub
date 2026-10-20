@@ -5,6 +5,7 @@ function togglePublishModal(show) {
 
 function handlePublishSubmit(e) {
   e.preventDefault();
+  
   const title = document.getElementById('pub-title').value.trim();
   const category = document.getElementById('pub-category').value;
   const price = parseFloat(document.getElementById('pub-price').value);
@@ -13,9 +14,6 @@ function handlePublishSubmit(e) {
   
   if (!title) { toast.show('Vui lòng nhập tên game!', 'error'); return; }
   if (isNaN(price) || price < 0) { toast.show('Giá không hợp lệ!', 'error'); return; }
-  if (urlInput) {
-    try { new URL(urlInput); } catch { toast.show('URL không hợp lệ!', 'error'); return; }
-  }
   
   const newGame = {
     id: "g-" + Date.now(),
@@ -32,13 +30,28 @@ function handlePublishSubmit(e) {
     gameUrl: urlInput || "https://html-classic.itch.zone/html/18013330/index.html"
   };
 
+  // 1. Lưu game mới vào kho game chung (LocalStorage)
   app.games.unshift(newGame);
   localStorage.setItem('nexus_games_v2', JSON.stringify(app.games));
 
-  toast.show(`Đã đăng bán "${title}" thành công!`, "success");
+  // 2. TỰ ĐỘNG LƯU VÀO YÊU THÍCH CỦA USER HIỆN TẠI
+  // Lấy danh sách yêu thích trực tiếp từ LocalStorage để chắc chắn không lỗi
+  let currentFavs = JSON.parse(localStorage.getItem('nexus_favs_v2')) || [];
+  
+  // Thêm ID game mới vào mảng yêu thích
+  currentFavs.push(newGame.id);
+  
+  // Cập nhật lại vào LocalStorage
+  localStorage.setItem('nexus_favs_v2', JSON.stringify(currentFavs));
+  
+  // Cập nhật lại biến toàn cục app
+  app.favorites = currentFavs;
+
+  toast.show(`Đã đăng bán "${title}" và thêm vào Yêu thích!`, "success");
   togglePublishModal(false);
   e.target.reset();
 
+  // 3. Vẽ lại toàn bộ giao diện
   filterModule.currentCategory = 'all';
   filterModule.currentNavFilter = 'all';
   filterModule.searchKeyword = '';
@@ -56,4 +69,10 @@ function handlePublishSubmit(e) {
     const gridSection = document.getElementById('all-games-section');
     if (gridSection) gridSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 200);
+}
+
+// Gán hàm vào object app để HTML gọi được
+if (typeof app !== 'undefined') {
+  app.handlePublishSubmit = handlePublishSubmit;
+  app.togglePublishModal = togglePublishModal;
 }

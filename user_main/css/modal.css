@@ -186,3 +186,8 @@
   border-radius: 8px;
   cursor: pointer;
 }
+.btn-fav-icon.active {
+  color: var(--accent-magenta);
+  border-color: var(--accent-magenta);
+  box-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
+}

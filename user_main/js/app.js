@@ -4,67 +4,129 @@ const app = {
   favorites: [],
 
   init() {
+    // 1. KHÔI PHỤC TÀI KHOẢN MẶC ĐỊNH (user1 -> user10 / pass 1234)
     if (!localStorage.getItem('nexus_accounts')) {
       if (typeof DEFAULT_ACCOUNTS !== 'undefined') {
         localStorage.setItem('nexus_accounts', JSON.stringify(DEFAULT_ACCOUNTS));
       }
     }
 
-  
-    if (typeof DEFAULT_GAMES_DATABASE !== 'undefined') this.games = DEFAULT_GAMES_DATABASE;
+    // 2. TẢI DỮ LIỆU GAME
+    const savedGames = localStorage.getItem('nexus_games_v2');
+    if (savedGames) {
+      this.games = JSON.parse(savedGames);
+    } else if (typeof DEFAULT_GAMES_DATABASE !== 'undefined') {
+      this.games = DEFAULT_GAMES_DATABASE;
+      localStorage.setItem('nexus_games_v2', JSON.stringify(this.games));
+    }
+
+    // 3. TẢI THƯ VIỆN & YÊU THÍCH
     this.library = JSON.parse(localStorage.getItem('nexus_library_v2')) || [];
     this.favorites = JSON.parse(localStorage.getItem('nexus_favs_v2')) || [];
     
+    // 4. KHỞI TẠO VÍ & TÊN
     if (!localStorage.getItem('nexus_balance')) localStorage.setItem('nexus_balance', '128.50');
     if (!localStorage.getItem('nexus_username')) localStorage.setItem('nexus_username', 'Khách');
 
-    
-    
-    // Kiểm tra đăng nhập và TỰ ĐỘNG MỞ FORM NẾU CHƯA ĐĂNG NHẬP
+    // 5. KIỂM TRA ĐĂNG NHẬP
     if (typeof window.authModule !== 'undefined') {
       window.authModule.checkLogin();
       if (localStorage.getItem('nexus_is_logged_in') !== 'true') {
-        // Đợi 0.5s để DOM load xong hoàn toàn rồi mới bật form
         setTimeout(() => window.authModule.toggleModal(true), 500);
       }
     }
 
+    // 6. VẼ GIAO DIỆN
     renderSidebar();
     renderSpotlight();
     renderCategoryCards();
-    this.applyFiltersAndRender(); // hàm học và vẽ grid
+    this.applyFiltersAndRender();
     
     if (typeof heroCarousel !== 'undefined') heroCarousel.init(this.games);
-    filterModule.init();
+    if (typeof filterModule !== 'undefined') filterModule.init();
 
-    // Bắt sự kiện tìm kiếm
-    const searchInput = document.getElementById('inp-search');
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        clearTimeout(this.searchDebounceTimer);
-        this.searchDebounceTimer = setTimeout(() => {
-          filterModule.searchKeyword = e.target.value.trim().toLowerCase();
-          this.applyFiltersAndRender();
-        }, 300);
-      });
+    // 7. GẮN SỰ KIỆN FORM ĐĂNG BÁN
+    const publishForm = document.getElementById('publish-form');
+    if (publishForm) {
+      publishForm.onsubmit = (e) => this.handlePublishSubmit(e);
     }
 
+    // 8. PHÍM ESC ĐỂ ĐÓNG PLAYER/MODAL
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') { closePlayer(); closeDetailModal(); }
+      if (e.key === 'Escape') { 
+        if(typeof closePlayer === 'function') closePlayer(); 
+        if(typeof closeDetailModal === 'function') closeDetailModal(); 
+      }
     });
   },
 
-  // HÀM MỚI: Kiểm tra đăng nhập trước khi thực hiện hành động
+  // HÀM ĐĂNG BÁN GAME
+  handlePublishSubmit(e) {
+    e.preventDefault();
+    
+    const title = document.getElementById('pub-title').value.trim();
+    const category = document.getElementById('pub-category').value;
+    const price = parseFloat(document.getElementById('pub-price').value);
+    const urlInput = document.getElementById('pub-url').value.trim();
+    const desc = document.getElementById('pub-desc').value.trim();
+    
+    if (!title) { toast.show('Vui lòng nhập tên game!', 'error'); return; }
+    if (isNaN(price) || price < 0) { toast.show('Giá không hợp lệ!', 'error'); return; }
+    
+    const newGame = {
+      id: "g-" + Date.now(),
+      title: title,
+      category: category,
+      price: price,
+      rating: 5.0,
+      playCount: "1",
+      coverColor: "linear-gradient(135deg, #00f0ff, #ff0055)",
+      badge: "MỚI",
+      isHot: false,
+      isNew: true,
+      desc: desc || "Mô tả trò chơi chưa cập nhật.",
+      gameUrl: urlInput || "https://html-classic.itch.zone/html/18013330/index.html"
+    };
+
+    // Lưu vào Kho Game
+    this.games.unshift(newGame);
+    localStorage.setItem('nexus_games_v2', JSON.stringify(this.games));
+
+    // Lưu vào Yêu thích
+    let currentFavs = JSON.parse(localStorage.getItem('nexus_favs_v2')) || [];
+    currentFavs.push(newGame.id);
+    localStorage.setItem('nexus_favs_v2', JSON.stringify(currentFavs));
+    this.favorites = currentFavs;
+
+    toast.show(`Đã đăng bán "${title}" và thêm vào Yêu thích!`, "success");
+    
+    // Đóng form và reset
+    const modal = document.getElementById('modal-publish');
+    if (modal) modal.classList.remove('active');
+    e.target.reset();
+
+    // Vẽ lại giao diện
+    filterModule.currentCategory = 'all';
+    filterModule.currentNavFilter = 'all';
+    filterModule.searchKeyword = '';
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    const discoverBtn = document.querySelector('.nav-item[data-filter="all"]');
+    if (discoverBtn) discoverBtn.classList.add('active');
+
+    this.switchView('store');
+    renderSidebar();
+    renderCategoryCards();
+    heroCarousel.init(this.games);
+    this.applyFiltersAndRender();
+  },
+
   requireLogin(callback) {
     if (localStorage.getItem('nexus_is_logged_in') === 'true') {
       if (callback) callback();
       return true;
     } else {
-      if (typeof window.authModule !== 'undefined') {
-        window.authModule.toggleModal(true);
-      }
-      // Hiện thông báo nhỏ
-      if (typeof toast !== 'undefined') toast.show("Vui lòng đăng nhập để thực hiện chức năng này!", "error");
+      if (typeof window.authModule !== 'undefined') window.authModule.toggleModal(true);
+      if (typeof toast !== 'undefined') toast.show("Vui lòng đăng nhập!", "error");
       return false;
     }
   },
@@ -74,67 +136,21 @@ const app = {
     if (gridSection) setTimeout(() => gridSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
   },
 
-    applyFiltersAndRender() {
+  applyFiltersAndRender() {
     let result = [...this.games];
     
-    // Lọc theo thể loại (Sidebar)
-    if (filterModule.currentCategory !== 'all') {
-      result = result.filter(g => g.category === filterModule.currentCategory);
-    }
-    
-    // Lọc theo Navbar (Mới nhất, Phổ biến)
+    if (filterModule.currentCategory !== 'all') result = result.filter(g => g.category === filterModule.currentCategory);
     if (filterModule.currentNavFilter === 'isNew') result = result.filter(g => g.isNew);
     else if (filterModule.currentNavFilter === 'isHot') result = result.filter(g => g.isHot);
     
-    // ==========================================
-    // NÂNG CẤP TÌM KIẾM MỜ (FUZZY SEARCH)
-    // ==========================================
     if (filterModule.searchKeyword) {
       const keyword = filterModule.searchKeyword;
-      
-      // Từ điển ánh xạ tiếng Việt sang tiếng Anh
-      const categoryMap = {
-        'bắn súng': 'Shooting', 'súng': 'Shooting', 'bắn': 'Shooting',
-        'hành động': 'Action', 'hành': 'Action', 'chiến đấu': 'Action',
-        'đua xe': 'Racing', 'đua': 'Racing', 'xe': 'Racing', 'tốc độ': 'Racing',
-        'nhập vai': 'RPG', 'vai': 'RPG', 'nhập': 'RPG',
-        'chiến thuật': 'Strategy', 'thuật': 'Strategy',
-        'trí tuệ': 'Puzzle', 'giải đố': 'Puzzle', 'đố': 'Puzzle',
-        'thể thao': 'Sports', 'thao': 'Sports', 'bóng đá': 'Sports', 'bóng': 'Sports',
-        'kinh dị': 'Horror', 'sợ': 'Horror', 'ma': 'Horror', 'quái': 'Horror',
-        '2 người': '2 Player', '2p': '2 Player',
-        'casual': 'Casual', 'giải trí': 'Casual', 'nhẹ nhàng': 'Casual',
-        'io': '.io'
-      };
-
-      // 1. Tìm xem từ khóa mày gõ có khớp với từ điển không
-      let searchCategory = '';
-      for (const [viKey, enCategory] of Object.entries(categoryMap)) {
-        if (keyword.includes(viKey)) {
-          searchCategory = enCategory;
-          break;
-        }
-      }
-
-      // 2. Tiến hành lọc mờ: Tách từ khóa thành các từ nhỏ và tìm
-      const searchTerms = keyword.split(' '); 
-
-      result = result.filter(g => {
-        const title = g.title.toLowerCase();
-        const cat = g.category.toLowerCase();
-        
-        // Khớp theo tên hoặc thể loại tiếng Anh
-        const matchTitleOrCat = searchTerms.some(term => title.includes(term) || cat.includes(term));
-        
-        // Khớp theo từ điển tiếng Việt
-        const matchViCat = searchCategory && g.category === searchCategory;
-
-        return matchTitleOrCat || matchViCat;
-      });
+      result = result.filter(g => 
+        g.title.toLowerCase().includes(keyword) || 
+        g.category.toLowerCase().includes(keyword)
+      );
     }
-    // ==========================================
 
-    // Sắp xếp
     if (filterModule.currentSort === 'rating') result.sort((a, b) => b.rating - a.rating);
     else if (filterModule.currentSort === 'popular') result.sort((a, b) => parseInt(b.playCount) - parseInt(a.playCount));
     else if (filterModule.currentSort === 'price-asc') result.sort((a, b) => a.price - b.price);
@@ -148,37 +164,100 @@ const app = {
 
   handleBuy(gameId) {
     const game = this.games.find(g => g.id === gameId);
-    if (!game || this.library.some(item => item.gameId === gameId)) { toast.show("Bạn đã sở hữu tựa game này!", "info"); return; }
+    if (!game || this.library.some(item => item.gameId === gameId)) { 
+      toast.show("Bạn đã sở hữu tựa game này!", "info"); 
+      return; 
+    }
     
     if (game.price > 0) {
       let balance = parseFloat(localStorage.getItem('nexus_balance') || '0');
       if (balance < game.price) { toast.show(`Số dư không đủ!`, "error"); return; }
       balance -= game.price; localStorage.setItem('nexus_balance', balance.toFixed(2));
-      document.getElementById('profile-balance-display').innerText = `$${balance.toFixed(2)}`;
+      const balanceEl = document.getElementById('profile-balance-display');
+      if (balanceEl) balanceEl.innerText = `$${balance.toFixed(2)}`;
     }
 
     const cdKey = `NEXUS-${Math.random().toString(36).substring(2, 7).toUpperCase()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
-    this.library.unshift({ libraryId: "lib-" + Date.now(), gameId: game.id, title: game.title, coverImage: game.coverImage || "", coverColor: game.coverColor, cdKey: cdKey });
+    this.library.unshift({ 
+      libraryId: "lib-" + Date.now(), 
+      gameId: game.id, 
+      title: game.title, 
+      coverImage: game.coverImage || "", 
+      coverColor: game.coverColor, 
+      cdKey: cdKey,
+      gameUrl: game.gameUrl
+    });
     localStorage.setItem('nexus_library_v2', JSON.stringify(this.library));
     
-    toast.show(`Mua thành công!`, "success");
-    closeDetailModal();
+    toast.show(`Mua thành công! Mã: ${cdKey}`, "success");
+    if(typeof closeDetailModal === 'function') closeDetailModal();
+    this.switchView('library');
+  },
+
+  toggleFavorite(gameId) {
+    const idx = this.favorites.indexOf(gameId);
+    if (idx > -1) {
+      this.favorites.splice(idx, 1);
+      toast.show("Đã xóa khỏi Yêu thích", "info");
+    } else {
+      this.favorites.push(gameId);
+      toast.show("Đã thêm vào Yêu thích!", "success");
+    }
+    localStorage.setItem('nexus_favs_v2', JSON.stringify(this.favorites));
+    
+    const favBtn = document.getElementById('btn-detail-fav');
+    if (favBtn) favBtn.classList.toggle('active', this.favorites.includes(gameId));
+
+    const libTitle = document.getElementById('library-title');
+    if (libTitle && libTitle.innerText.includes('YÊU THÍCH')) {
+      this.switchView('favorites');
+    }
   },
 
   switchView(viewName) {
     const storeView = document.getElementById('store-view');
     const libraryView = document.getElementById('library-view');
+    const libTitle = document.getElementById('library-title');
+    const container = document.getElementById('library-grid');
     
     if (viewName === 'store') {
-      storeView.classList.add('active'); libraryView.classList.remove('active');
-    } else {
-      storeView.classList.remove('active'); libraryView.classList.add('active');
-      document.getElementById('library-title').innerText = viewName === 'favorites' ? "GAME YÊU THÍCH" : "THƯ VIỆN";
-      const container = document.getElementById('library-grid');
-      const items = viewName === 'favorites' ? this.games.filter(g => this.favorites.includes(g.id)) : this.library;
+      storeView.classList.add('active'); 
+      libraryView.classList.remove('active');
+      return;
+    }
+
+    storeView.classList.remove('active'); 
+    libraryView.classList.add('active');
+
+    if (viewName === 'favorites') {
+      libTitle.innerText = "GAME YÊU THÍCH";
+      const items = this.games.filter(g => this.favorites.includes(g.id));
       container.innerHTML = items.length ? items.map(item => `
-        <div class="game-card"><div class="game-thumb" style="${item.coverImage ? `background-image:url('${item.coverImage}')` : `background:${item.coverColor}`}">${item.title}</div><div class="game-info"><div class="game-title">${item.title}</div></div></div>
-      `).join('') : '<p style="text-align:center; grid-column:1/-1;">Trống.</p>';
+        <div class="game-card" onclick="app.openGameDetail('${item.id}')">
+          <div class="game-thumb" style="${item.coverImage ? `background-image:url('${item.coverImage}')` : `background:${item.coverColor}`}">
+             <span class="game-badge badge-hot">❤️ YÊU THÍCH</span>${item.title}
+          </div>
+          <div class="game-info"><div class="game-title">${item.title}</div></div>
+        </div>
+      `).join('') : '<p style="text-align:center; grid-column:1/-1;">Chưa có game yêu thích.</p>';
+
+    } else {
+      libTitle.innerText = "THƯ VIỆN BẢN QUYỀN";
+      container.innerHTML = this.library.length ? this.library.map(item => `
+        <div class="game-card">
+          <div class="game-thumb" style="${item.coverImage ? `background-image:url('${item.coverImage}')` : `background:${item.coverColor}`}">
+            <span class="game-badge badge-new">ĐÃ KÍCH HOẠT</span>${item.title}
+          </div>
+          <div class="game-info">
+            <div class="game-title">${item.title}</div>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.2rem;">CD-Key:</p>
+            <div style="font-family: monospace; color: var(--accent-cyan); font-size: 0.85rem; margin-bottom: 0.8rem;">${item.cdKey}</div>
+            <div class="game-actions">
+              <button class="btn-primary" style="flex: 1;" onclick="app.playGame('${item.gameUrl || 'https://html-classic.itch.zone/html/18013330/index.html'}', '${item.title}')">▶ CHƠI NGAY</button>
+            </div>
+          </div>
+        </div>
+      `).join('') : '<p style="text-align:center; grid-column:1/-1;">Thư viện trống.</p>';
     }
   },
   
@@ -191,14 +270,11 @@ const app = {
   },
 
   togglePublishModal: (show) => document.getElementById('modal-publish').classList.toggle('active', show),
-  handlePublishSubmit: (e) => { e.preventDefault(); toast.show("Đang phát triển", "info"); app.togglePublishModal(false); },
   handleAvatarClick: () => { if(localStorage.getItem('nexus_is_logged_in') === 'true') toggleProfileDropdown(); else authModule.toggleModal(true); },
   toggleAuthModal: (show) => authModule.toggleModal(show),
   switchAuthTab: (tab) => authModule.switchTab(tab),
   handleLogin: (e) => authModule.handleLogin(e),
   handleRegister: (e) => authModule.handleRegister(e),
-  
-  // Nối các hàm từ file khác vào object app để HTML gọi được
   openGameDetail: (id) => openDetailModal(id),
   closeDetailModal: () => closeDetailModal(),
   playGame: (url, title) => playGame(url, title),
