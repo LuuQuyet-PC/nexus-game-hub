@@ -10,7 +10,7 @@ const app = {
       }
     }
 
-    // 2. Code cũ giữ nguyên
+  
     if (typeof DEFAULT_GAMES_DATABASE !== 'undefined') this.games = DEFAULT_GAMES_DATABASE;
     this.library = JSON.parse(localStorage.getItem('nexus_library_v2')) || [];
     this.favorites = JSON.parse(localStorage.getItem('nexus_favs_v2')) || [];
@@ -18,12 +18,7 @@ const app = {
     if (!localStorage.getItem('nexus_balance')) localStorage.setItem('nexus_balance', '128.50');
     if (!localStorage.getItem('nexus_username')) localStorage.setItem('nexus_username', 'Khách');
 
-    if (typeof DEFAULT_GAMES_DATABASE !== 'undefined') this.games = DEFAULT_GAMES_DATABASE;
-    this.library = JSON.parse(localStorage.getItem('nexus_library_v2')) || [];
-    this.favorites = JSON.parse(localStorage.getItem('nexus_favs_v2')) || [];
     
-    if (!localStorage.getItem('nexus_balance')) localStorage.setItem('nexus_balance', '128.50');
-    if (!localStorage.getItem('nexus_username')) localStorage.setItem('nexus_username', 'Khách');
     
     // Kiểm tra đăng nhập và TỰ ĐỘNG MỞ FORM NẾU CHƯA ĐĂNG NHẬP
     if (typeof window.authModule !== 'undefined') {
@@ -37,7 +32,7 @@ const app = {
     renderSidebar();
     renderSpotlight();
     renderCategoryCards();
-    this.applyFiltersAndRender();
+    this.applyFiltersAndRender(); // hàm học và vẽ grid
     
     if (typeof heroCarousel !== 'undefined') heroCarousel.init(this.games);
     filterModule.init();
