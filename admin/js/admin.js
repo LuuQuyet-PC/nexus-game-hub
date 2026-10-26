@@ -1,10 +1,13 @@
+// ==========================================
+// MODULE QUẢN TRỊ (ADMIN)
+// ==========================================
 
-// 1. Bảo mật
+// 1. BẢO MẬT: Kiểm tra quyền Admin
 if (localStorage.getItem('nexus_role') !== 'admin') {
   window.location.href = "index.html";
 }
 
-// 2. Khai báo
+// 2. KHAI BÁO BIẾN TOÀN CỤC
 let db_games = JSON.parse(localStorage.getItem('nexus_games_v2')) || DEFAULT_GAMES_DATABASE;
 let db_accounts = JSON.parse(localStorage.getItem('nexus_accounts')) || {};
 let db_library = JSON.parse(localStorage.getItem('nexus_library_v2')) || [];
@@ -37,17 +40,35 @@ function showToast(message, type = 'success') {
     container.className = 'admin-toast-container';
     document.body.appendChild(container);
   }
-
   const toast = document.createElement('div');
   toast.className = `admin-toast ${type}`;
   const icon = type === 'error' ? '✖' : '✔';
   toast.innerHTML = `<strong>${icon}</strong> ${message}`;
   container.appendChild(toast);
-
   setTimeout(() => {
     toast.style.animation = 'fadeOut 0.3s ease forwards';
     setTimeout(() => toast.remove(), 300);
   }, 3000);
+}
+
+// ==================== CÀI ĐẶT (SETTINGS) ====================
+function loadSettings() {
+  const settings = JSON.parse(localStorage.getItem('nexus_settings') || '{}');
+  if (settings.siteName) document.getElementById('set-site-name').value = settings.siteName;
+  if (settings.email) document.getElementById('set-email').value = settings.email;
+  document.getElementById('set-maintenance').checked = settings.maintenance || false;
+  document.getElementById('set-register').checked = settings.allowRegister !== false;
+}
+
+function saveSettings() {
+  const settings = {
+    siteName: document.getElementById('set-site-name').value,
+    email: document.getElementById('set-email').value,
+    maintenance: document.getElementById('set-maintenance').checked,
+    allowRegister: document.getElementById('set-register').checked
+  };
+  localStorage.setItem('nexus_settings', JSON.stringify(settings));
+  showToast("Đã lưu cấu hình hệ thống!");
 }
 
 // ==================== CHUYỂN TAB ====================
@@ -70,7 +91,6 @@ function switchTab(tabId) {
     'settings': 'Cài Đặt Hệ Thống',
     'server': 'Quản Lý Máy Chủ (Task Manager)'
   };
-
   document.getElementById('page-title').innerText = titles[tabId];
 
   if (tabId === 'overview') {
@@ -82,11 +102,14 @@ function switchTab(tabId) {
     renderGames();
   } else if (tabId === 'server') {
     startTaskManager();
+  } else if (tabId === 'settings') {
+    loadSettings(); // Load lại trạng thái công tắc khi mở tab
   }
 }
 
 // ==================== KHỞI TẠO ====================
 function initAdminDashboard() {
+  loadSettings(); // Load cài đặt khi vừa vào trang
   document.getElementById('admin-name').innerText = localStorage.getItem('nexus_username') || 'Admin';
   updateKPIs();
   renderUsers();
@@ -137,6 +160,7 @@ function renderGames() {
   }).join('');
 }
 
+// ==================== BIỂU ĐỒ LƯU LƯỢNG ====================
 function renderChart() {
   const ctx = document.getElementById('trafficChart').getContext('2d');
   if (trafficChart) trafficChart.destroy();
@@ -161,50 +185,23 @@ function renderChart() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          labels: { color: '#fff' }
-        }
-      },
+      plugins: { legend: { labels: { color: '#fff' } } },
       scales: {
-        y: {
-          ticks: { color: '#8b9bb4' },
-          grid: { color: 'rgba(255, 255, 255, 0.05)' }
-        },
-        x: {
-          ticks: { color: '#8b9bb4' },
-          grid: { display: false }
-        }
+        y: { ticks: { color: '#8b9bb4' }, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+        x: { ticks: { color: '#8b9bb4' }, grid: { display: false } }
       }
     }
   });
 }
 
-// ==================== TASK MANAGER (SERVER) ====================
+// ==================== TASK MANAGER (MÔ PHỎNG SERVER) ====================
 const tmChartConfig = {
   type: 'line',
   data: {
     labels: tmData.labels,
-    datasets: [{
-      data: [],
-      borderColor: '#00f0ff',
-      borderWidth: 2,
-      tension: 0.4,
-      pointRadius: 0,
-      fill: true,
-      backgroundColor: 'rgba(0, 240, 255, 0.1)'
-    }]
+    datasets: [{ data: [], borderColor: '#00f0ff', borderWidth: 2, tension: 0.4, pointRadius: 0, fill: true, backgroundColor: 'rgba(0, 240, 255, 0.1)' }]
   },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { display: false },
-      y: { display: false, min: 0, max: 100 }
-    }
-  }
+  options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } } }
 };
 
 function startTaskManager() {
@@ -213,23 +210,19 @@ function startTaskManager() {
       const createChart = (ctxId, dataArray, color, bgColor, maxVal = 100) => {
         const canvas = document.getElementById(ctxId);
         if (!canvas) return null;
-
         const ctx = canvas.getContext('2d');
         const config = JSON.parse(JSON.stringify(tmChartConfig));
         config.data.datasets[0].data = [...dataArray];
         config.data.datasets[0].borderColor = color;
         config.data.datasets[0].backgroundColor = bgColor;
         config.options.scales.y.max = maxVal;
-
         return new Chart(ctx, config);
       };
-
       tmCharts.cpu = createChart('chart-cpu', tmData.cpu, '#00f0ff', 'rgba(0, 240, 255, 0.1)');
       tmCharts.ram = createChart('chart-ram', tmData.ram, '#ff0055', 'rgba(255, 0, 85, 0.1)');
       tmCharts.disk = createChart('chart-disk', tmData.disk, '#f39c12', 'rgba(243, 156, 18, 0.1)');
       tmCharts.net = createChart('chart-net', tmData.net, '#2ecc71', 'rgba(46, 204, 113, 0.1)', 150);
     }
-
     renderProcesses();
 
     serverInterval = setInterval(() => {
@@ -243,22 +236,10 @@ function startTaskManager() {
       tmData.disk.push(newDisk); tmData.disk.shift();
       tmData.net.push(newNet); tmData.net.shift();
 
-      if (tmCharts.cpu) {
-        tmCharts.cpu.data.datasets[0].data = tmData.cpu;
-        tmCharts.cpu.update();
-      }
-      if (tmCharts.ram) {
-        tmCharts.ram.data.datasets[0].data = tmData.ram;
-        tmCharts.ram.update();
-      }
-      if (tmCharts.disk) {
-        tmCharts.disk.data.datasets[0].data = tmData.disk;
-        tmCharts.disk.update();
-      }
-      if (tmCharts.net) {
-        tmCharts.net.data.datasets[0].data = tmData.net;
-        tmCharts.net.update();
-      }
+      if (tmCharts.cpu) { tmCharts.cpu.data.datasets[0].data = tmData.cpu; tmCharts.cpu.update(); }
+      if (tmCharts.ram) { tmCharts.ram.data.datasets[0].data = tmData.ram; tmCharts.ram.update(); }
+      if (tmCharts.disk) { tmCharts.disk.data.datasets[0].data = tmData.disk; tmCharts.disk.update(); }
+      if (tmCharts.net) { tmCharts.net.data.datasets[0].data = tmData.net; tmCharts.net.update(); }
 
       document.getElementById('tm-cpu-val').innerText = `${Math.round(newCpu)}%`;
       document.getElementById('tm-ram-val').innerText = `${Math.round(newRam)}%`;
@@ -273,7 +254,6 @@ function startTaskManager() {
           p.cpu = 100 - newCpu;
         }
       });
-
       renderProcesses();
     }, 1000);
   } catch (e) {
@@ -288,7 +268,6 @@ function renderProcesses() {
   tbody.innerHTML = processes.map(p => {
     const cpuColor = p.cpu > 50 ? '#ff0055' : '#00f0ff';
     const ramColor = p.ram > 300 ? '#ff0055' : '#00f0ff';
-
     return `
       <tr>
         <td style="font-weight: 600;">${p.name}</td>
@@ -330,32 +309,17 @@ function deleteGame(gameId) {
 
 function updateGamePrice(gameId, newPrice) {
   const price = parseFloat(newPrice);
-
   if (isNaN(price) || price < 0) {
     showToast("Giá tiền không hợp lệ!", "error");
     renderGames();
     return;
   }
-
   const gameIndex = db_games.findIndex(g => g.id === gameId);
-
   if (gameIndex !== -1) {
     db_games[gameIndex].price = price;
     localStorage.setItem('nexus_games_v2', JSON.stringify(db_games));
     showToast(`Đã cập nhật giá thành $${price.toFixed(2)}`);
   }
-}
-
-function saveSettings() {
-  const siteName = document.getElementById('set-site-name').value;
-  const email = document.getElementById('set-email').value;
-  const maintenance = document.getElementById('set-maintenance').checked;
-  const allowReg = document.getElementById('set-register').checked;
-
-  const settings = { siteName, email, maintenance, allowReg };
-
-  localStorage.setItem('nexus_settings', JSON.stringify(settings));
-  showToast("Đã lưu cấu hình hệ thống!");
 }
 
 function logoutAdmin() {
@@ -364,4 +328,5 @@ function logoutAdmin() {
   window.location.href = "index.html";
 }
 
+// ==================== KHỞI CHẠY ====================
 document.addEventListener('DOMContentLoaded', initAdminDashboard);

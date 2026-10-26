@@ -4,14 +4,25 @@ const app = {
   favorites: [],
 
   init() {
-    // 1. KHÔI PHỤC TÀI KHOẢN MẶC ĐỊNH (user1 -> user10 / pass 1234)
+    // ===== 1. KIỂM TRA BẢO TRÌ VÀ HIỂN THỊ BANNER =====
+    const settings = JSON.parse(localStorage.getItem('nexus_settings') || '{}');
+    if (settings.maintenance === true) {
+      const banner = document.createElement('div');
+      banner.id = 'maintenance-banner';
+      banner.style.cssText = "background: #ff0055; color: #fff; text-align: center; padding: 12px; font-weight: bold; position: fixed; top: 0; left: 0; width: 100%; z-index: 99999; font-family: 'Inter', sans-serif; font-size: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.5);";
+      banner.innerHTML = "⚠️ HỆ THỐNG ĐANG BẢO TRÌ. CHỈ ADMIN MỚI CÓ THỂ ĐĂNG NHẬP!";
+      document.body.prepend(banner);
+      document.body.style.paddingTop = "50px";
+    }
+
+    // ===== 2. KHÔI PHỤC TÀI KHOẢN MẶC ĐỊNH =====
     if (!localStorage.getItem('nexus_accounts')) {
       if (typeof DEFAULT_ACCOUNTS !== 'undefined') {
         localStorage.setItem('nexus_accounts', JSON.stringify(DEFAULT_ACCOUNTS));
       }
     }
 
-    // 2. TẢI DỮ LIỆU GAME
+    // ===== 3. TẢI DỮ LIỆU GAME =====
     const savedGames = localStorage.getItem('nexus_games_v2');
     if (savedGames) {
       this.games = JSON.parse(savedGames);
@@ -20,15 +31,15 @@ const app = {
       localStorage.setItem('nexus_games_v2', JSON.stringify(this.games));
     }
 
-    // 3. TẢI THƯ VIỆN & YÊU THÍCH
+    // ===== 4. TẢI THƯ VIỆN & YÊU THÍCH =====
     this.library = JSON.parse(localStorage.getItem('nexus_library_v2')) || [];
     this.favorites = JSON.parse(localStorage.getItem('nexus_favs_v2')) || [];
-    
-    // 4. KHỞI TẠO VÍ & TÊN
+
+    // ===== 5. KHỞI TẠO VÍ & TÊN =====
     if (!localStorage.getItem('nexus_balance')) localStorage.setItem('nexus_balance', '128.50');
     if (!localStorage.getItem('nexus_username')) localStorage.setItem('nexus_username', 'Khách');
 
-    // 5. KIỂM TRA ĐĂNG NHẬP
+    // ===== 6. KIỂM TRA ĐĂNG NHẬP =====
     if (typeof window.authModule !== 'undefined') {
       window.authModule.checkLogin();
       if (localStorage.getItem('nexus_is_logged_in') !== 'true') {
@@ -36,43 +47,43 @@ const app = {
       }
     }
 
-    // 6. VẼ GIAO DIỆN
+    // ===== 7. VẼ GIAO DIỆN =====
     renderSidebar();
     renderSpotlight();
     renderCategoryCards();
     this.applyFiltersAndRender();
-    
+
     if (typeof heroCarousel !== 'undefined') heroCarousel.init(this.games);
     if (typeof filterModule !== 'undefined') filterModule.init();
 
-    // 7. GẮN SỰ KIỆN FORM ĐĂNG BÁN
+    // ===== 8. GẮN SỰ KIỆN FORM ĐĂNG BÁN =====
     const publishForm = document.getElementById('publish-form');
     if (publishForm) {
       publishForm.onsubmit = (e) => this.handlePublishSubmit(e);
     }
 
-    // 8. PHÍM ESC ĐỂ ĐÓNG PLAYER/MODAL
+    // ===== 9. PHÍM ESC =====
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') { 
-        if(typeof closePlayer === 'function') closePlayer(); 
-        if(typeof closeDetailModal === 'function') closeDetailModal(); 
+      if (e.key === 'Escape') {
+        if (typeof closePlayer === 'function') closePlayer();
+        if (typeof closeDetailModal === 'function') closeDetailModal();
       }
     });
   },
 
-  // HÀM ĐĂNG BÁN GAME
+  // ===== HÀM ĐĂNG BÁN GAME (Đã tự động thêm vào Yêu thích) =====
   handlePublishSubmit(e) {
     e.preventDefault();
-    
+
     const title = document.getElementById('pub-title').value.trim();
     const category = document.getElementById('pub-category').value;
     const price = parseFloat(document.getElementById('pub-price').value);
     const urlInput = document.getElementById('pub-url').value.trim();
     const desc = document.getElementById('pub-desc').value.trim();
-    
+
     if (!title) { toast.show('Vui lòng nhập tên game!', 'error'); return; }
     if (isNaN(price) || price < 0) { toast.show('Giá không hợp lệ!', 'error'); return; }
-    
+
     const newGame = {
       id: "g-" + Date.now(),
       title: title,
@@ -88,24 +99,24 @@ const app = {
       gameUrl: urlInput || "https://html-classic.itch.zone/html/18013330/index.html"
     };
 
-    // Lưu vào Kho Game
+    // 1. Lưu vào Kho Game
     this.games.unshift(newGame);
     localStorage.setItem('nexus_games_v2', JSON.stringify(this.games));
 
-    // Lưu vào Yêu thích
+    // 2. Tự động lưu vào Yêu thích
     let currentFavs = JSON.parse(localStorage.getItem('nexus_favs_v2')) || [];
     currentFavs.push(newGame.id);
     localStorage.setItem('nexus_favs_v2', JSON.stringify(currentFavs));
     this.favorites = currentFavs;
 
     toast.show(`Đã đăng bán "${title}" và thêm vào Yêu thích!`, "success");
-    
-    // Đóng form và reset
+
+    // 3. Đóng form
     const modal = document.getElementById('modal-publish');
     if (modal) modal.classList.remove('active');
     e.target.reset();
 
-    // Vẽ lại giao diện
+    // 4. Vẽ lại giao diện
     filterModule.currentCategory = 'all';
     filterModule.currentNavFilter = 'all';
     filterModule.searchKeyword = '';
@@ -120,6 +131,7 @@ const app = {
     this.applyFiltersAndRender();
   },
 
+  // ===== KIỂM TRA ĐĂNG NHẬP =====
   requireLogin(callback) {
     if (localStorage.getItem('nexus_is_logged_in') === 'true') {
       if (callback) callback();
@@ -136,17 +148,18 @@ const app = {
     if (gridSection) setTimeout(() => gridSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
   },
 
+  // ===== BỘ LỌC & RENDER =====
   applyFiltersAndRender() {
     let result = [...this.games];
-    
+
     if (filterModule.currentCategory !== 'all') result = result.filter(g => g.category === filterModule.currentCategory);
     if (filterModule.currentNavFilter === 'isNew') result = result.filter(g => g.isNew);
     else if (filterModule.currentNavFilter === 'isHot') result = result.filter(g => g.isHot);
-    
+
     if (filterModule.searchKeyword) {
       const keyword = filterModule.searchKeyword;
-      result = result.filter(g => 
-        g.title.toLowerCase().includes(keyword) || 
+      result = result.filter(g =>
+        g.title.toLowerCase().includes(keyword) ||
         g.category.toLowerCase().includes(keyword)
       );
     }
@@ -158,42 +171,45 @@ const app = {
 
     const countEl = document.getElementById('results-count');
     if (countEl) countEl.innerText = `Tìm thấy ${result.length} trò chơi phù hợp`;
-    
+
     renderGameGrid(result);
   },
 
+  // ===== MUA GAME =====
   handleBuy(gameId) {
     const game = this.games.find(g => g.id === gameId);
-    if (!game || this.library.some(item => item.gameId === gameId)) { 
-      toast.show("Bạn đã sở hữu tựa game này!", "info"); 
-      return; 
+    if (!game || this.library.some(item => item.gameId === gameId)) {
+      toast.show("Bạn đã sở hữu tựa game này!", "info");
+      return;
     }
-    
+
     if (game.price > 0) {
       let balance = parseFloat(localStorage.getItem('nexus_balance') || '0');
       if (balance < game.price) { toast.show(`Số dư không đủ!`, "error"); return; }
-      balance -= game.price; localStorage.setItem('nexus_balance', balance.toFixed(2));
+      balance -= game.price;
+      localStorage.setItem('nexus_balance', balance.toFixed(2));
       const balanceEl = document.getElementById('profile-balance-display');
       if (balanceEl) balanceEl.innerText = `$${balance.toFixed(2)}`;
     }
 
     const cdKey = `NEXUS-${Math.random().toString(36).substring(2, 7).toUpperCase()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
-    this.library.unshift({ 
-      libraryId: "lib-" + Date.now(), 
-      gameId: game.id, 
-      title: game.title, 
-      coverImage: game.coverImage || "", 
-      coverColor: game.coverColor, 
+    this.library.unshift({
+      libraryId: "lib-" + Date.now(),
+      gameId: game.id,
+      title: game.title,
+      coverImage: game.coverImage || "",
+      coverColor: game.coverColor,
       cdKey: cdKey,
       gameUrl: game.gameUrl
     });
     localStorage.setItem('nexus_library_v2', JSON.stringify(this.library));
-    
+
     toast.show(`Mua thành công! Mã: ${cdKey}`, "success");
-    if(typeof closeDetailModal === 'function') closeDetailModal();
+    if (typeof closeDetailModal === 'function') closeDetailModal();
     this.switchView('library');
   },
 
+  // ===== XỬ LÝ YÊU THÍCH =====
   toggleFavorite(gameId) {
     const idx = this.favorites.indexOf(gameId);
     if (idx > -1) {
@@ -204,7 +220,7 @@ const app = {
       toast.show("Đã thêm vào Yêu thích!", "success");
     }
     localStorage.setItem('nexus_favs_v2', JSON.stringify(this.favorites));
-    
+
     const favBtn = document.getElementById('btn-detail-fav');
     if (favBtn) favBtn.classList.toggle('active', this.favorites.includes(gameId));
 
@@ -214,21 +230,23 @@ const app = {
     }
   },
 
+  // ===== CHUYỂN VIEW (STORE / LIBRARY / FAVORITES) =====
   switchView(viewName) {
     const storeView = document.getElementById('store-view');
     const libraryView = document.getElementById('library-view');
     const libTitle = document.getElementById('library-title');
     const container = document.getElementById('library-grid');
-    
+
     if (viewName === 'store') {
-      storeView.classList.add('active'); 
+      storeView.classList.add('active');
       libraryView.classList.remove('active');
       return;
     }
 
-    storeView.classList.remove('active'); 
+    storeView.classList.remove('active');
     libraryView.classList.add('active');
 
+    // --- TRANG YÊU THÍCH ---
     if (viewName === 'favorites') {
       libTitle.innerText = "GAME YÊU THÍCH";
       const items = this.games.filter(g => this.favorites.includes(g.id));
@@ -241,6 +259,7 @@ const app = {
         </div>
       `).join('') : '<p style="text-align:center; grid-column:1/-1;">Chưa có game yêu thích.</p>';
 
+    // --- TRANG THƯ VIỆN (ĐÃ MUA) ---
     } else {
       libTitle.innerText = "THƯ VIỆN BẢN QUYỀN";
       container.innerHTML = this.library.length ? this.library.map(item => `
@@ -260,17 +279,18 @@ const app = {
       `).join('') : '<p style="text-align:center; grid-column:1/-1;">Thư viện trống.</p>';
     }
   },
-  
+
   resetToHome() {
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.nav-item[data-filter="all"]').forEach(b => b.classList.add('active'));
     this.switchView('store');
     filterModule.applyCategoryFilter('all');
-    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   },
 
+  // ===== CÁC HÀM GỌI TỪ HTML =====
   togglePublishModal: (show) => document.getElementById('modal-publish').classList.toggle('active', show),
-  handleAvatarClick: () => { if(localStorage.getItem('nexus_is_logged_in') === 'true') toggleProfileDropdown(); else authModule.toggleModal(true); },
+  handleAvatarClick: () => { if (localStorage.getItem('nexus_is_logged_in') === 'true') toggleProfileDropdown(); else authModule.toggleModal(true); },
   toggleAuthModal: (show) => authModule.toggleModal(show),
   switchAuthTab: (tab) => authModule.switchTab(tab),
   handleLogin: (e) => authModule.handleLogin(e),
