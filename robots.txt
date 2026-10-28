@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://nexus-game-hub-make-by-luuquyet.onrender.com/sitemap.xml
